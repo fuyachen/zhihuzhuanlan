@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <global-header :user="testUser"></global-header>
     <column-list :list="testData"></column-list>
   </div>
 </template>
@@ -7,7 +8,16 @@
 <script setup lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css"
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue"
+import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue"
 
+// 用户数据
+const testUser: UserProps = {
+  id: 1,
+  username: "Viking",
+  isLogin: true,
+}
+
+// 专栏数据
 const testData: ColumnProps[] = [
   {
     id: 1,
