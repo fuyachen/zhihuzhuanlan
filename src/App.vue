@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid px-0">
     <global-header :user="testUser"></global-header>
     <column-list :list="testData"></column-list>
   </div>
