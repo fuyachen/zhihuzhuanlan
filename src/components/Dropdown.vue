@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, watch } from "vue"
+import useClickOutside from "@/hooks/useClickOutside"
 
 defineProps<{ title: string }>()
 
@@ -27,23 +28,13 @@ const toggleOpen = () => {
 // 显式指定的泛型参数和一个初始值null
 const dropdown = ref(<HTMLElement | null>null)
 
-// 事件处理函数:如果点击区域在dropdown元素外，且isOpen为true，收起菜单
-const handler = (e: MouseEvent) => {
-  if (!dropdown.value?.contains(e.target as HTMLElement) && isOpen.value) {
+const isClickOutside = useClickOutside(dropdown)
+
+// isClickOutside的类型为Ref<boolean>，侦听它的变化
+watch(isClickOutside, () => {
+  if (isClickOutside.value && isOpen.value) {
     isOpen.value = false
-  } else {
-    isOpen.value = true
   }
-}
-
-// 组件被挂载后，可以获取到DOM节点
-onMounted(() => {
-  document.addEventListener("click", handler)
-})
-
-// 卸载后，清除监听，防止内存泄漏
-onUnmounted(() => {
-  document.removeEventListener("click", handler)
 })
 </script>
 
