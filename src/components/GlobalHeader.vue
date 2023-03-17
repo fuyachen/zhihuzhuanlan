@@ -23,15 +23,27 @@
     </ul>
     <ul v-else class="list-inline my-1 me-3">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light"
-          >欢迎你，{{ user.username }}</a
-        >
+        <!-- 使用模板字符串可以避免username是undefined的错误 -->
+        <Dropdown :title="`欢迎你，${user.username}`">
+          <dropdown-item
+            ><a class="dropdown-item" href="#">新建文章</a></dropdown-item
+          >
+          <dropdown-item disabled
+            ><a class="dropdown-item" href="#">管理账户</a></dropdown-item
+          >
+          <dropdown-item
+            ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
+          >
+        </Dropdown>
       </li>
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
+import Dropdown from "./Dropdown.vue"
+import DropdownItem from "./DropdownItem.vue"
+
 export interface UserProps {
   id?: number
   username?: string
