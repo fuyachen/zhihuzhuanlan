@@ -25,7 +25,8 @@ export type RulesProp = RuleProp[]
 </script>
 
 <script setup lang="ts">
-import { reactive } from "vue"
+import { reactive, onMounted } from "vue"
+import { emitter } from "../ts/mitt"
 
 const props = defineProps<{
   rules: RulesProp
@@ -76,8 +77,14 @@ const validation = () => {
       return pass
     })
     inputRef.err = !allPassed
+    return allPassed //表单项的验证结果
   }
+  return true //如果没有传入规则的话，验证结果就为true
 }
+
+onMounted(() => {
+  emitter.emit("from-item-created", validation)
+})
 </script>
 
 <style scoped></style>

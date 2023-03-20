@@ -37,7 +37,7 @@ import ValidateForm from "./components/ValidateForm.vue"
 
 // 表单规则
 const onFormSubmit = (result: boolean) => {
-  console.log(123, result)
+  console.log(result)
 }
 
 const test = ref("")
