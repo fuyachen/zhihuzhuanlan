@@ -7,6 +7,7 @@
       :value="inputRef.val"
       @blur="validation"
       @input="updateValue"
+      v-bind="$attrs"
     />
     <div v-if="inputRef.err" class="invalid-feedback">
       {{ inputRef.message }}

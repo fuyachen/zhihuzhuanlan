@@ -4,7 +4,11 @@
     <column-list :list="testData"></column-list>
     <div class="mb-3">
       <label class="form-label">邮箱地址</label>
-      <validate-input :rules="emailRules" v-model="test"></validate-input>
+      <validate-input
+        :rules="emailRules"
+        v-model="test"
+        placeholder="请输入邮箱"
+      ></validate-input>
       <div class="form-text">用户输入：{{ test }}</div>
     </div>
   </div>
