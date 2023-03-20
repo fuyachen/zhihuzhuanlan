@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ disabled: boolean }>(), {
+withDefaults(defineProps<{ disabled?: boolean }>(), {
   disabled: false,
 })
 </script>

@@ -17,7 +17,7 @@
 
 <script lang="ts">
 interface RuleProp {
-  type: "required" | "email"
+  type: "required" | "email" | "min" | "max"
   message: string
 }
 
@@ -48,6 +48,8 @@ const updateValue = (e: Event) => {
 }
 
 const emailReg = /^.+@[a-zA-Z0-9-]+\.([a-zA-Z0-9-]+)$/
+const minReg = /^[.\S]{6,}$/
+const maxReg = /^[.\S]{6,16}$/
 
 const validation = () => {
   if (props.rules) {
@@ -61,6 +63,12 @@ const validation = () => {
           break
         case "email":
           pass = emailReg.test(inputRef.val)
+          break
+        case "min":
+          pass = minReg.test(inputRef.val)
+          break
+        case "max":
+          pass = maxReg.test(inputRef.val)
           break
         default:
           break
