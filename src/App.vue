@@ -2,6 +2,10 @@
   <div class="container-fluid px-0">
     <global-header :user="testUser"></global-header>
     <column-list :list="testData"></column-list>
+    <div class="mb-3">
+      <label class="form-label">邮箱地址</label>
+      <validate-input :rules="emailRules"></validate-input>
+    </div>
   </div>
 </template>
 
@@ -9,6 +13,13 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue"
 import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue"
+import ValidateInput, { RulesProp } from "./components/ValidateInput.vue"
+
+// 表单规则
+const emailRules: RulesProp = [
+  { type: "required", message: "请输入邮箱" },
+  { type: "email", message: "请输入正确的邮箱地址" },
+]
 
 // 用户数据
 const testUser: UserProps = {
