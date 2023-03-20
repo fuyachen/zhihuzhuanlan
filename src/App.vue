@@ -4,18 +4,21 @@
     <column-list :list="testData"></column-list>
     <div class="mb-3">
       <label class="form-label">邮箱地址</label>
-      <validate-input :rules="emailRules"></validate-input>
+      <validate-input :rules="emailRules" v-model="test"></validate-input>
+      <div class="form-text">用户输入：{{ test }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css"
+import { ref } from "vue"
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue"
 import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue"
 import ValidateInput, { RulesProp } from "./components/ValidateInput.vue"
 
 // 表单规则
+const test = ref("")
 const emailRules: RulesProp = [
   { type: "required", message: "请输入邮箱" },
   { type: "email", message: "请输入正确的邮箱地址" },
