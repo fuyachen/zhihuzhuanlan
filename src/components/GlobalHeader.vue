@@ -3,7 +3,12 @@
     class="navbar bg-primary sticky-top justify-content-between mb-4 px-4"
     data-bs-theme="dark"
   >
-    <a class="navbar-brand ms-3" style="color: aliceblue" href="#">
+    <routerLink
+      to="/"
+      class="navbar-brand ms-3"
+      style="color: aliceblue"
+      href="#"
+    >
       <img
         src="@/assets/logo.png"
         alt="Logo"
@@ -12,10 +17,12 @@
         class="d-inline-block align-text-center"
       />
       知乎专栏
-    </a>
+    </routerLink>
     <ul v-if="!user.isLogin" class="list-inline my-1 me-3">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light">登录</a>
+        <router-Link to="/login" href="#" class="btn btn-outline-light"
+          >登录</router-Link
+        >
       </li>
       <li class="list-inline-item">
         <a href="#" class="btn btn-outline-light">注册</a>

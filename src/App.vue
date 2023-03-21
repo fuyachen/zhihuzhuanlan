@@ -1,6 +1,9 @@
 <template>
   <div class="container-fluid px-0">
     <global-header :user="testUser"></global-header>
+    <router-link to="/"></router-link>
+    <router-link to="/login"></router-link>
+    <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-4">
       <small>
         <ul class="list-inline mb-0">
@@ -21,7 +24,7 @@ import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue"
 const testUser: UserProps = {
   id: 1,
   username: "Viking",
-  isLogin: true,
+  isLogin: false,
 }
 </script>
 
