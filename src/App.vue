@@ -1,6 +1,15 @@
 <template>
   <div class="container-fluid px-0">
     <global-header :user="testUser"></global-header>
+    <footer class="text-center py-4 text-secondary bg-light mt-4">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">© 2023 知乎专栏 ·</li>
+          <li class="list-inline-item">github ·</li>
+          <li class="list-inline-item">联系我们</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
