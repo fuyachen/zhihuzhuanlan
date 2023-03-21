@@ -27,10 +27,14 @@
 import { ref } from "vue"
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue"
 import ValidateForm from "../components/ValidateForm.vue"
+import { useRouter } from "vue-router"
 
-// 表单规则
+const router = useRouter()
+
 const onFormSubmit = (result: boolean) => {
-  console.log(result)
+  if (result) {
+    router.push("/column")
+  }
 }
 
 const test = ref("")
