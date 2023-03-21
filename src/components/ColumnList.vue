@@ -10,7 +10,11 @@
           />
           <h5 class="card-title">{{ column.title }}</h5>
           <p class="card-text text-start my-4">{{ column.description }}</p>
-          <a href="#" class="btn btn-primary">进入专栏</a>
+          <routerLink
+            :to="{ name: 'column', params: { id: column.id } }"
+            class="btn btn-primary"
+            >进入专栏</routerLink
+          >
         </div>
       </div>
     </div>
