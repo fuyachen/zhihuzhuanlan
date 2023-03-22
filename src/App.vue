@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid px-0">
-    <global-header :user="testUser"></global-header>
+    <global-header :user="currentUser"></global-header>
     <router-link to="/"></router-link>
     <router-link to="/login"></router-link>
     <router-view></router-view>
@@ -18,14 +18,13 @@
 
 <script setup lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css"
-import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue"
+import GlobalHeader from "./components/GlobalHeader.vue"
+import { useStore } from "vuex"
+import { GlobalDataProps } from "@/store"
+import { computed } from "vue"
 
-// 用户数据
-const testUser: UserProps = {
-  id: 1,
-  username: "Viking",
-  isLogin: false,
-}
+const store = useStore<GlobalDataProps>()
+const currentUser = computed(() => store.state.user)
 </script>
 
 <style scoped></style>
