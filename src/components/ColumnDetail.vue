@@ -1,13 +1,38 @@
 <template>
-  <h1>
-    <pre>{{ route }}</pre>
-  </h1>
+  <div class="column-detail-page w-75 mx-auto">
+    <div
+      class="column-info row mb-4 border-bottom pb-4 align-items-center"
+      v-if="column"
+    >
+      <div class="col-3 text-center">
+        <img
+          :src="column.avatar"
+          :alt="column.title"
+          class="rounded-circle border"
+        />
+      </div>
+      <div class="col-9">
+        <h4>{{ column.title }}</h4>
+        <p class="text-muted">{{ column.description }}</p>
+      </div>
+    </div>
+    <PostList :postList="postList"></PostList>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { testData, testPosts } from "../testData"
 import { useRoute } from "vue-router"
+import PostList from "./PostList.vue"
 
 const route = useRoute()
+
+// 获取id对应的专栏
+const currentId = +route.params.id
+const column = testData.find((column) => column.id === currentId)
+
+// 获取专栏中的文章
+const postList = testPosts.filter((post) => post.columnId === currentId)
 </script>
 
 <style scoped></style>
