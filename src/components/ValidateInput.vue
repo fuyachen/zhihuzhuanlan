@@ -1,7 +1,19 @@
 <template>
   <div class="validate-input-container pb-3">
+    <!-- 父组件传prop：tag或不传，渲染input；否则渲染textarea -->
     <input
+      v-if="props.tag !== 'textarea'"
       type="text"
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.err }"
+      :value="inputRef.val"
+      @blur="validation"
+      @input="updateValue"
+      v-bind="$attrs"
+    />
+    <textarea
+      v-else
+      rows="10"
       class="form-control"
       :class="{ 'is-invalid': inputRef.err }"
       :value="inputRef.val"
@@ -20,7 +32,6 @@ interface RuleProp {
   type: "required" | "email" | "min" | "max"
   message: string
 }
-
 export type RulesProp = RuleProp[]
 </script>
 
@@ -28,10 +39,16 @@ export type RulesProp = RuleProp[]
 import { reactive, onMounted } from "vue"
 import { emitter } from "../ts/mitt"
 
-const props = defineProps<{
-  rules: RulesProp
-  modelValue: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    rules: RulesProp
+    modelValue: string
+    tag?: "input" | "textarea"
+  }>(),
+  {
+    tag: "input",
+  }
+)
 
 const emit = defineEmits(["update:modelValue"])
 

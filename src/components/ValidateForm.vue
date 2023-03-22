@@ -1,15 +1,9 @@
 <template>
   <form class="validate-form-container">
     <slot></slot>
-    <div class="submit-area">
+    <div class="submit-area" @click.prevent="submitForm">
       <slot name="submit">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          @click.prevent="submitForm"
-        >
-          Submit
-        </button>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </slot>
     </div>
   </form>
@@ -31,6 +25,7 @@ const emit = defineEmits(["from-submit"])
 const submitForm = () => {
   // map的返回值[boolean, boolean,...];使用every遍历
   const result = funcArr.map((func) => func()).every((ele) => ele)
+  // 自定义事件form-submit触发的回调函数会接收result作为其参数
   emit("from-submit", result)
 }
 </script>

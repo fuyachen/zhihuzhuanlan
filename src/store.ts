@@ -1,6 +1,12 @@
 import { createStore } from "vuex"
 import { ColumnProps, PostProps, testData, testPosts } from "@/testData"
-import { UserProps } from "@/components/GlobalHeader.vue"
+
+export interface UserProps {
+  id?: number
+  columnId?: number
+  username?: string
+  isLogin: boolean
+}
 
 //为了获取state的代码提示，我们需要定义store中state的类型,再传入泛型中
 export interface GlobalDataProps {
@@ -12,6 +18,7 @@ export interface GlobalDataProps {
 const store = createStore<GlobalDataProps>({
   state: {
     user: {
+      columnId: 2,
       isLogin: false,
     },
     columns: testData,
@@ -20,6 +27,10 @@ const store = createStore<GlobalDataProps>({
   mutations: {
     login(state) {
       state.user = { ...state.user, username: "Viking", isLogin: true }
+    },
+    createPost(state, newPost) {
+      state.posts.push(newPost)
+      console.log(state.posts)
     },
   },
   getters: {
@@ -32,7 +43,7 @@ const store = createStore<GlobalDataProps>({
     },
 
     getPostById(state) {
-      return (id: number) => state.posts.find((post) => post.columnId === id)
+      return (id: number) => state.posts.filter((post) => post.columnId === id)
     },
   },
 })

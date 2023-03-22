@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import PostList from "./PostList.vue"
 import { useRoute } from "vue-router"
 import { computed } from "vue"
 import { GlobalDataProps } from "@/store"

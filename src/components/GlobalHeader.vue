@@ -18,7 +18,7 @@
       />
       知乎专栏
     </routerLink>
-    <ul v-if="!user.isLogin" class="list-inline my-1 me-3">
+    <ul v-if="!currentUser.isLogin" class="list-inline my-1 me-3">
       <li class="list-inline-item">
         <router-Link to="/login" href="#" class="btn btn-outline-light"
           >登录</router-Link
@@ -31,9 +31,11 @@
     <ul v-else class="list-inline my-1 me-3">
       <li class="list-inline-item">
         <!-- 使用模板字符串可以避免username是undefined的错误 -->
-        <Dropdown :title="`欢迎你，${user.username}`">
+        <Dropdown :title="`欢迎你，${currentUser.username}`">
           <dropdown-item
-            ><a class="dropdown-item" href="#">新建文章</a></dropdown-item
+            ><routerLink to="/createPost" class="dropdown-item"
+              >新建文章</routerLink
+            ></dropdown-item
           >
           <dropdown-item disabled
             ><a class="dropdown-item" href="#">管理账户</a></dropdown-item
@@ -50,14 +52,12 @@
 <script setup lang="ts">
 import Dropdown from "./Dropdown.vue"
 import DropdownItem from "./DropdownItem.vue"
+import { useStore } from "vuex"
+import { GlobalDataProps } from "@/store"
+import { computed } from "vue"
 
-export interface UserProps {
-  id?: number
-  username?: string
-  isLogin: boolean
-}
-
-defineProps<{ user: UserProps }>()
+const store = useStore<GlobalDataProps>()
+const currentUser = computed(() => store.state.user)
 </script>
 
 <style scoped></style>
