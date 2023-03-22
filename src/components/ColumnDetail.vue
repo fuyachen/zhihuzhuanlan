@@ -21,18 +21,22 @@
 </template>
 
 <script setup lang="ts">
-import { testData, testPosts } from "../testData"
 import { useRoute } from "vue-router"
-import PostList from "./PostList.vue"
+import { computed } from "vue"
+import { GlobalDataProps } from "@/store"
+import { useStore } from "vuex"
 
 const route = useRoute()
+const store = useStore<GlobalDataProps>()
+
+const currentId = +route.params.id
 
 // 获取id对应的专栏
-const currentId = +route.params.id
-const column = testData.find((column) => column.id === currentId)
+// const column = testData.find((column) => column.id === currentId)
+const column = computed(() => store.getters.getColumnById(currentId))
 
 // 获取专栏中的文章
-const postList = testPosts.filter((post) => post.columnId === currentId)
+const postList = computed(() => store.getters.getPostById(currentId))
 </script>
 
 <style scoped></style>
