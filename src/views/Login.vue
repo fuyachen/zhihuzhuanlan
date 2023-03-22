@@ -28,12 +28,17 @@ import { ref } from "vue"
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue"
 import ValidateForm from "../components/ValidateForm.vue"
 import { useRouter } from "vue-router"
+import { GlobalDataProps } from "@/store"
+import { useStore } from "vuex"
+
+const store = useStore<GlobalDataProps>()
 
 const router = useRouter()
 
 const onFormSubmit = (result: boolean) => {
   if (result) {
-    router.push("/column")
+    router.push("/")
+    store.commit("login")
   }
 }
 

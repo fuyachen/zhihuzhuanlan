@@ -17,6 +17,11 @@ const store = createStore<GlobalDataProps>({
     columns: testData,
     posts: testPosts,
   },
+  mutations: {
+    login(state) {
+      state.user = { ...state.user, username: "Viking", isLogin: true }
+    },
+  },
 })
 
 export default store

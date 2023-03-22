@@ -1,9 +1,15 @@
 <template>
   <form class="validate-form-container">
     <slot></slot>
-    <div class="submit-area" @click.prevent="submitForm">
+    <div class="submit-area">
       <slot name="submit">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          @click.prevent="submitForm"
+        >
+          Submit
+        </button>
       </slot>
     </div>
   </form>
