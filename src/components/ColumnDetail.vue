@@ -49,7 +49,6 @@ const column = computed(() => {
 // 获取专栏中的文章
 const postList = computed(() => {
   let postList: PostProps[] = store.getters.getPostById(currentId)
-  console.log(postList)
   postList = postList.map((post) => {
     if (!post.image.url) {
       post.image.url = imgUrl

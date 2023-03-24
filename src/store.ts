@@ -1,4 +1,4 @@
-import { createStore } from "vuex"
+import { createStore, Commit } from "vuex"
 import axios from "axios"
 
 export interface UserProps {
@@ -36,6 +36,15 @@ export interface GlobalDataProps {
   posts: PostProps[]
 }
 
+const getAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit
+) => {
+  const { data } = await axios.get(url)
+  commit(mutationName, data)
+}
+
 const store = createStore<GlobalDataProps>({
   state: {
     user: {
@@ -65,19 +74,15 @@ const store = createStore<GlobalDataProps>({
   },
   actions: {
     fetchColumns({ commit }) {
-      axios
-        .get("/columns", { params: { currentPage: 1, pageSize: 5 } })
-        .then((res) => commit("fetchColumns", res.data))
+      getAndCommit("/columns", "fetchColumns", commit)
     },
+
     fetchColumn({ commit }, cid) {
-      axios
-        .get(`/columns/${cid}`)
-        .then((res) => commit("fetchColumn", res.data))
+      getAndCommit(`/columns/${cid}`, "fetchColumn", commit)
     },
+
     fetchPosts({ commit }, cid) {
-      axios
-        .get(`/columns/${cid}/posts`)
-        .then((res) => commit("fetchPosts", res.data))
+      getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
     },
   },
   getters: {
