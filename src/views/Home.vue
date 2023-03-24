@@ -19,10 +19,15 @@
 import ColumnList from "../components/ColumnList.vue"
 import { useStore } from "vuex"
 import { GlobalDataProps } from "@/store"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 
 // 专栏数据
 const store = useStore<GlobalDataProps>()
+
+onMounted(() => {
+  store.dispatch("fetchColumns")
+})
+
 const columns = computed(() => store.state.columns)
 </script>
 
