@@ -8,6 +8,7 @@ import axios from "axios"
 axios.defaults.baseURL = "http://apis.imooc.com/api/"
 
 axios.interceptors.request.use((config) => {
+  store.commit("setLoading", true)
   if (config.method.toUpperCase() === "GET") {
     config.params = { ...config.params, icode: "B55BE08D3054EC26" }
   } else {
@@ -18,6 +19,13 @@ axios.interceptors.request.use((config) => {
       config.data = { ...config.data, icode: "B55BE08D3054EC26" }
     }
   }
+  return config
+})
+
+axios.interceptors.response.use((config) => {
+  setTimeout(() => {
+    store.commit("setLoading", false)
+  }, 2000)
   return config
 })
 

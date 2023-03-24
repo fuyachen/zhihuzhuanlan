@@ -34,6 +34,7 @@ export interface GlobalDataProps {
   user: UserProps
   columns: ColumnProps[]
   posts: PostProps[]
+  loading: boolean
 }
 
 const getAndCommit = async (
@@ -53,6 +54,7 @@ const store = createStore<GlobalDataProps>({
     },
     columns: [],
     posts: [],
+    loading: false,
   },
   mutations: {
     login(state) {
@@ -70,6 +72,9 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, rawData) {
       state.posts = rawData.data.list
       console.log(state.posts)
+    },
+    setLoading(state, status) {
+      state.loading = status
     },
   },
   actions: {

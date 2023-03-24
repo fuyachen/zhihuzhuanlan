@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid px-0">
     <global-header></global-header>
+    <Loader v-if="isLoading"></Loader>
     <router-link to="/"></router-link>
     <router-link to="/login"></router-link>
     <router-view></router-view>
@@ -19,6 +20,12 @@
 <script setup lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css"
 import GlobalHeader from "./components/GlobalHeader.vue"
+import Loader from "./components/Loader.vue"
+import { useStore } from "vuex"
+import { computed } from "vue"
+
+const store = useStore()
+const isLoading = computed(() => store.state.loading)
 </script>
 
 <style scoped></style>
