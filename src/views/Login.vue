@@ -37,11 +37,17 @@ const router = useRouter()
 
 const onFormSubmit = (result: boolean) => {
   if (result) {
-    store.dispatch("loginAndFetch", {
-      email: emailVal.value,
-      password: passwordVal.value,
-    })
-    router.push("/")
+    store
+      .dispatch("loginAndFetch", {
+        email: emailVal.value,
+        password: passwordVal.value,
+      })
+      .then(() => {
+        router.push("/")
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 }
 

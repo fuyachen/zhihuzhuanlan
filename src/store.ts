@@ -38,6 +38,11 @@ export interface PostProps {
   createdAt: string
 }
 
+export interface GlobalErrorProps {
+  status: boolean
+  message: string
+}
+
 //为了获取state的代码提示，我们需要定义store中state的类型,再传入泛型中
 export interface GlobalDataProps {
   user: UserProps
@@ -45,6 +50,7 @@ export interface GlobalDataProps {
   posts: PostProps[]
   loading: boolean
   token: string
+  error: GlobalErrorProps
 }
 
 // 封装get请求
@@ -76,6 +82,7 @@ const store = createStore<GlobalDataProps>({
     posts: [],
     loading: false,
     token: localStorage.getItem("token") || "",
+    error: { status: false, message: "" },
   },
 
   mutations: {
@@ -98,12 +105,17 @@ const store = createStore<GlobalDataProps>({
     login(state, payload) {
       const { token } = payload.data
       state.token = token
+      // 将登录信息存储到localStorage中
       localStorage.setItem("token", token)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
     },
     // 更新用户信息
     fetchCurrentUser(state, rawData) {
       state.user = { ...rawData.data, isLogin: true }
+    },
+    // 请求失败，更新error信息
+    setError(state, err) {
+      state.error = err
     },
   },
 
@@ -121,7 +133,7 @@ const store = createStore<GlobalDataProps>({
     },
 
     fetchCurrentUser({ commit }) {
-      getAndCommit("/user/current", "fetchCurrentUser", commit)
+      return getAndCommit("/user/current", "fetchCurrentUser", commit)
     },
 
     login({ commit }, payload) {

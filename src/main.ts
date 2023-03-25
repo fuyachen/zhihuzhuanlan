@@ -22,12 +22,22 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
-axios.interceptors.response.use((config) => {
-  setTimeout(() => {
+axios.interceptors.response.use(
+  (config) => {
+    setTimeout(() => {
+      store.commit("setLoading", false)
+    }, 200)
+    return config
+  },
+  // 错误处理
+  (err) => {
+    const { error } = err.response.data
+    store.commit("setError", { status: true, message: error })
+    // 请求失败，要关闭loading效果
     store.commit("setLoading", false)
-  }, 500)
-  return config
-})
+    return Promise.reject(error)
+  }
+)
 
 const app = createApp(App)
 

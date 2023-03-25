@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid px-0">
     <global-header></global-header>
+    <h1>{{ err.message }}</h1>
     <Loader v-if="isLoading"></Loader>
     <router-link to="/"></router-link>
     <router-link to="/login"></router-link>
@@ -28,7 +29,9 @@ import axios from "axios"
 
 const store = useStore<GlobalDataProps>()
 const isLoading = computed(() => store.state.loading)
+const err = computed(() => store.state.error)
 
+// App第一次加载时检查token是否存在，以及用户是否未登录
 onMounted(() => {
   if (store.state.token && !store.state.user.isLogin) {
     axios.defaults.headers.common.Authorization = `Bearer ${store.state.token}`
