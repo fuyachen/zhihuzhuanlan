@@ -9,7 +9,6 @@
           :src="column.avatar.url"
           :alt="column.title"
           class="rounded-circle border"
-          style="width: 150px"
         />
       </div>
       <div class="col-9">
@@ -28,6 +27,7 @@ import { computed, onMounted } from "vue"
 import { GlobalDataProps, PostProps } from "@/store"
 import { useStore } from "vuex"
 import imgUrl from "@/assets/column.jpg"
+import postUrl from "@/assets/post.png"
 
 const route = useRoute()
 const store = useStore<GlobalDataProps>()
@@ -35,8 +35,8 @@ const store = useStore<GlobalDataProps>()
 const currentId = route.params.id
 
 onMounted(() => {
-  store.dispatch("fetchColumn", { cid: currentId })
-  store.dispatch("fetchPosts", { cid: currentId })
+  store.dispatch("fetchColumn", currentId)
+  store.dispatch("fetchPosts", currentId)
 })
 // 获取id对应的专栏
 const column = computed(() => {
@@ -50,8 +50,8 @@ const column = computed(() => {
 const postList = computed(() => {
   let postList: PostProps[] = store.getters.getPostById(currentId)
   postList = postList.map((post) => {
-    if (!post.image.url) {
-      post.image.url = imgUrl
+    if (!post.image) {
+      post.image = { url: postUrl }
     } else {
       post.image.url =
         post.image.url + "?x-oss-process=image/resize,m_fixed,h_100,w_200"

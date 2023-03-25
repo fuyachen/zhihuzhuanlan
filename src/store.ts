@@ -4,7 +4,7 @@ import axios from "axios"
 export interface UserProps {
   id?: number
   columnId?: number
-  username?: string
+  name?: string
   isLogin: boolean
 }
 
@@ -48,17 +48,14 @@ const getAndCommit = async (
 
 const store = createStore<GlobalDataProps>({
   state: {
-    user: {
-      columnId: 2,
-      isLogin: false,
-    },
+    user: { isLogin: false, name: "viking", columnId: 1 },
     columns: [],
     posts: [],
     loading: false,
   },
   mutations: {
     login(state) {
-      state.user = { ...state.user, username: "Viking", isLogin: true }
+      state.user = { ...state.user, isLogin: true }
     },
     createPost(state, newPost) {
       state.posts.push(newPost)
