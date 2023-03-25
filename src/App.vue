@@ -22,10 +22,19 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import GlobalHeader from "./components/GlobalHeader.vue"
 import Loader from "./components/Loader.vue"
 import { useStore } from "vuex"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
+import { GlobalDataProps } from "./store"
+import axios from "axios"
 
-const store = useStore()
+const store = useStore<GlobalDataProps>()
 const isLoading = computed(() => store.state.loading)
+
+onMounted(() => {
+  if (store.state.token && !store.state.user.isLogin) {
+    axios.defaults.headers.common.Authorization = `Bearer ${store.state.token}`
+    store.dispatch("fetchCurrentUser")
+  }
+})
 </script>
 
 <style scoped></style>

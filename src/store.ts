@@ -75,7 +75,7 @@ const store = createStore<GlobalDataProps>({
     columns: [],
     posts: [],
     loading: false,
-    token: "",
+    token: localStorage.getItem("token") || "",
   },
 
   mutations: {
@@ -98,6 +98,7 @@ const store = createStore<GlobalDataProps>({
     login(state, payload) {
       const { token } = payload.data
       state.token = token
+      localStorage.setItem("token", token)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
     },
     // 更新用户信息
