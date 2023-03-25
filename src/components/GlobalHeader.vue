@@ -31,7 +31,7 @@
     <ul v-else class="list-inline my-1 me-3">
       <li class="list-inline-item">
         <!-- 使用模板字符串可以避免username是undefined的错误 -->
-        <Dropdown :title="`欢迎你，${currentUser.username}`">
+        <Dropdown :title="`欢迎你，${currentUser.nickName}`">
           <dropdown-item
             ><routerLink to="/createPost" class="dropdown-item"
               >新建文章</routerLink

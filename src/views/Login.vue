@@ -4,7 +4,7 @@
       <label class="form-label">邮箱地址</label>
       <validate-input
         :rules="emailRules"
-        v-model="test"
+        v-model="emailVal"
         placeholder="请输入邮箱"
       ></validate-input>
     </div>
@@ -12,7 +12,7 @@
       <label class="form-label">密码</label>
       <validate-input
         :rules="passwordRules"
-        v-model="password"
+        v-model="passwordVal"
         placeholder="请输入6-16位密码"
         type="password"
       ></validate-input>
@@ -37,18 +37,21 @@ const router = useRouter()
 
 const onFormSubmit = (result: boolean) => {
   if (result) {
+    store.dispatch("loginAndFetch", {
+      email: emailVal.value,
+      password: passwordVal.value,
+    })
     router.push("/")
-    store.commit("login")
   }
 }
 
-const test = ref("")
+const emailVal = ref("")
 const emailRules: RulesProp = [
   { type: "required", message: "请输入邮箱" },
   { type: "email", message: "请输入正确的邮箱地址" },
 ]
 
-const password = ref("")
+const passwordVal = ref("")
 const passwordRules: RulesProp = [
   { type: "required", message: "密码不能为空" },
   { type: "min", message: "密码至少包含6位，且不能出现空格" },

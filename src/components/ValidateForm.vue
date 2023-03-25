@@ -1,6 +1,7 @@
 <template>
   <form class="validate-form-container">
     <slot></slot>
+    <!-- submit元素的默认行为会刷新页面，需要prevent组织默认行为 -->
     <div class="submit-area" @click.prevent="submitForm">
       <slot name="submit">
         <button type="submit" class="btn btn-primary">Submit</button>
