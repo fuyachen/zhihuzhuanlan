@@ -10,15 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted } from "vue"
+import useDOMCreate from "@/hooks/useDOMCreate"
 
-const node = document.createElement("div")
-node.id = "loading"
-document.body.appendChild(node)
-
-onUnmounted(() => {
-  document.body.removeChild(node)
-})
+useDOMCreate("loading")
 </script>
 
 <style scoped>

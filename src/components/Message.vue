@@ -18,7 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue"
+import { ref } from "vue"
+import useDOMCreate from "@/hooks/useDOMCreate"
+
 export type AlertType = "success" | "error" | "default"
 
 const props = withDefaults(
@@ -31,6 +33,8 @@ const props = withDefaults(
   }
 )
 
+useDOMCreate("alert")
+
 const alertStyle = {
   "alert-success": props.alertType === "success",
   "alert-danger": props.alertType === "error",
@@ -39,15 +43,5 @@ const alertStyle = {
 const isVisible = ref(true)
 const hide = () => {
   isVisible.value = false
-  document.body.removeChild(node)
 }
-
-// 创建顶层节点
-const node = document.createElement("div")
-node.id = "alert"
-document.body.appendChild(node)
-// 移除顶层节点
-onUnmounted(() => {
-  document.body.removeChild(node)
-})
 </script>
