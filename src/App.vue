@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid px-0">
     <global-header></global-header>
-    <h1>{{ err.message }}</h1>
+    <Message :message="err.message" alert-type="error"></Message>
     <Loader v-if="isLoading"></Loader>
     <router-link to="/"></router-link>
     <router-link to="/login"></router-link>
@@ -26,6 +26,7 @@ import { useStore } from "vuex"
 import { computed, onMounted } from "vue"
 import { GlobalDataProps } from "./store"
 import axios from "axios"
+import Message from "./components/Message.vue"
 
 const store = useStore<GlobalDataProps>()
 const isLoading = computed(() => store.state.loading)
