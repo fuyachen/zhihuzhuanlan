@@ -25,7 +25,7 @@
         >
       </li>
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light">注册</a>
+        <routerLink to="/signup" class="btn btn-outline-light">注册</routerLink>
       </li>
     </ul>
     <ul v-else class="list-inline my-1 me-3">
@@ -40,7 +40,7 @@
           <dropdown-item disabled
             ><a class="dropdown-item" href="#">管理账户</a></dropdown-item
           >
-          <dropdown-item
+          <dropdown-item @click="signout"
             ><a class="dropdown-item" href="#">退出登录</a></dropdown-item
           >
         </Dropdown>
@@ -55,9 +55,22 @@ import DropdownItem from "./DropdownItem.vue"
 import { useStore } from "vuex"
 import { GlobalDataProps } from "@/store"
 import { computed } from "vue"
+import { useRouter } from "vue-router"
+import createMessge from "@/ts/createMessage"
 
 const store = useStore<GlobalDataProps>()
 const currentUser = computed(() => store.state.user)
+const router = useRouter()
+const signout = () => {
+  localStorage.removeItem("token")
+  createMessge("您已退出登录，即将返回首页", "default", 2000)
+  store.dispatch("fetchCurrentUser").then(() => {
+    setTimeout(() => {
+      store.state.user.isLogin = false
+      router.push("/")
+    }, 2000)
+  })
+}
 </script>
 
 <style scoped></style>

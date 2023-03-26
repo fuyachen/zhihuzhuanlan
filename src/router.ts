@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue"
 import ColumnDetail from "@/components/ColumnDetail.vue"
 import CreatePost from "@/views/CreatePost.vue"
 import store from "@/store"
+import Signup from "./views/Signup.vue"
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: "/createPost",
     component: CreatePost,
     meta: { requiredLogin: true },
+  },
+  {
+    name: "signup",
+    path: "/signup",
+    component: Signup,
   },
 ]
 

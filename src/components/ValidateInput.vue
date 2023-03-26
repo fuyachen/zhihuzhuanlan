@@ -29,8 +29,9 @@
 
 <script lang="ts">
 interface RuleProp {
-  type: "required" | "email" | "min" | "max"
+  type: "required" | "email" | "min" | "max" | "custom"
   message: string
+  customValidator?: () => boolean
 }
 export type RulesProp = RuleProp[]
 </script>
@@ -87,6 +88,9 @@ const validation = () => {
           break
         case "max":
           pass = maxReg.test(inputRef.val)
+          break
+        case "custom":
+          pass = rule.customValidator()
           break
         default:
           break

@@ -7,7 +7,7 @@ export type AlertType = "success" | "error" | "default"
 const createMessge = (
   message: string,
   alertType: AlertType,
-  timeout?: 2000
+  timeout?: number
 ) => {
   // 使用h函数创建 类型为Message，props为 message, alertType 的虚拟节点
   const msgVnode = h(Message, { message, alertType })

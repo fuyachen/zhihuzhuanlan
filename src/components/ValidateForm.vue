@@ -26,7 +26,7 @@ const emit = defineEmits(["from-submit"])
 const submitForm = () => {
   // map的返回值[boolean, boolean,...];使用every遍历
   const result = funcArr.map((func) => func()).every((ele) => ele)
-  // 自定义事件form-submit触发的回调函数会接收result作为其参数
+  // 自定义事件form-submit触发的父组件中的回调函数会接收result作为其参数
   emit("from-submit", result)
 }
 </script>

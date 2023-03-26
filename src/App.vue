@@ -9,7 +9,14 @@
       <small>
         <ul class="list-inline mb-0">
           <li class="list-inline-item">© 2023 知乎专栏 ·</li>
-          <li class="list-inline-item">github ·</li>
+          <li class="list-inline-item">
+            <a
+              href="https://github.com/fuyachen"
+              class="link-primary"
+              style="text-decoration: none"
+              >github ·</a
+            >
+          </li>
           <li class="list-inline-item">联系我们</li>
         </ul>
       </small>
