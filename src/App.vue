@@ -45,7 +45,7 @@ watch(
   () => {
     const { message, status } = err.value
     if (status && message) {
-      createMessge(message, "error", 2000)
+      createMessge(message, "error")
     }
   }
 )

@@ -30,6 +30,7 @@ import ValidateForm from "../components/ValidateForm.vue"
 import { useRouter } from "vue-router"
 import { GlobalDataProps } from "@/store"
 import { useStore } from "vuex"
+import createMessge from "@/ts/createMessage"
 
 const store = useStore<GlobalDataProps>()
 
@@ -43,7 +44,10 @@ const onFormSubmit = (result: boolean) => {
         password: passwordVal.value,
       })
       .then(() => {
-        router.push("/")
+        createMessge("登陆成功 🎉 2秒后跳转到首页", "success", 2000)
+        setTimeout(() => {
+          router.push("/")
+        }, 2000)
       })
       .catch((err) => {
         console.log(err)
