@@ -9,6 +9,8 @@ axios.defaults.baseURL = "http://apis.imooc.com/api/"
 
 axios.interceptors.request.use((config) => {
   store.commit("setLoading", true)
+  // 重置error状态，否则错误信息只能提示一次
+  store.commit("setError", { status: false, message: "" })
   if (config.method.toUpperCase() === "GET") {
     config.params = { ...config.params, icode: "B55BE08D3054EC26" }
   } else {

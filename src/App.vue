@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid px-0">
     <global-header></global-header>
-    <Message :message="err.message" alert-type="error"></Message>
     <Loader v-if="isLoading"></Loader>
     <router-link to="/"></router-link>
     <router-link to="/login"></router-link>
@@ -23,10 +22,10 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import GlobalHeader from "./components/GlobalHeader.vue"
 import Loader from "./components/Loader.vue"
 import { useStore } from "vuex"
-import { computed, onMounted } from "vue"
+import { computed, onMounted, watch } from "vue"
 import { GlobalDataProps } from "./store"
 import axios from "axios"
-import Message from "./components/Message.vue"
+import createMessge from "./ts/createMessage"
 
 const store = useStore<GlobalDataProps>()
 const isLoading = computed(() => store.state.loading)
@@ -39,6 +38,17 @@ onMounted(() => {
     store.dispatch("fetchCurrentUser")
   }
 })
+
+// 侦听err，status为true，渲染错误信息提示组件
+watch(
+  () => err.value.status,
+  () => {
+    const { message, status } = err.value
+    if (status && message) {
+      createMessge(message, "error", 2000)
+    }
+  }
+)
 </script>
 
 <style scoped></style>
