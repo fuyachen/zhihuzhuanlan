@@ -1,0 +1,88 @@
+<template>
+  <div class="file-upload">
+    <div class="file-upload-container" @click.prevent="triggerUpload">
+      <slot v-if="fileStatus === 'uploading'" name="uploading"> </slot>
+      <slot
+        v-else-if="fileStatus === 'success'"
+        name="uploaded"
+        :uploadeData="uploadeData"
+      >
+      </slot>
+      <slot v-else name="default">
+        <button class="btn btn-primary">点击上传</button>
+      </slot>
+    </div>
+    <input
+      type="file"
+      class="file-input d-none"
+      ref="fileInput"
+      @change="handleFileChange"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue"
+import axios from "axios"
+
+type UploadStatus = "ready" | "uploading" | "success" | "error"
+type CheckFuction = (file: File) => boolean
+
+const props = defineProps<{
+  action: string
+  beforeUpload: CheckFuction
+}>()
+
+const fileInput = ref<null | HTMLInputElement>(null)
+const fileStatus = ref<UploadStatus>("ready")
+const uploadeData = ref()
+
+// 点击上传
+const triggerUpload = () => {
+  // DOM节点存在，则点击
+  if (fileInput.value) {
+    fileInput.value.click()
+  }
+}
+
+// axios发送文件数据
+const handleFileChange = (e: Event) => {
+  const currentTarget = e.target as HTMLInputElement
+  if (currentTarget.files) {
+    const files = Array.from(currentTarget.files)
+    // 检查文件类型，不满足则停止后面的逻辑
+    if (props.beforeUpload) {
+      const result = props.beforeUpload(files[0])
+      if (!result) {
+        return
+      }
+    }
+    //用户已经选择了文件，则状态变为loading
+    fileStatus.value = "uploading"
+    const formData = new FormData()
+    formData.append("file", files[0])
+    axios
+      .post(props.action, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data)
+        fileStatus.value = "success"
+        uploadeData.value = res.data
+      })
+      .catch(() => {
+        fileStatus.value = "error"
+      })
+      .finally(() => {
+        //清空input上的文件
+        if (fileInput.value) {
+          fileInput.value.value = ""
+        }
+      })
+  }
+}
+</script>
+
+<style scoped></style>

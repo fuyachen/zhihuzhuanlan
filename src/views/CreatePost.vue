@@ -1,6 +1,16 @@
 <template>
   <div class="create-post-page">
-    <input type="file" name="file" @change.prevent="handleFileChange" />
+    <Uploader :beforeUpload="beforeUpload" action="/upload">
+      <template v-slot:uploading>
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">加载中...</span>
+        </div>
+      </template>
+      <template v-slot:uploaded="slotProps">
+        <img :src="slotProps.uploadeData.data.url" width="500" />
+      </template>
+    </Uploader>
+    <!-- <input type="file" name="file" @change.prevent="handleFileChange" /> -->
     <ValidateForm @from-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题</label>
@@ -34,7 +44,8 @@ import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue"
 import { useStore } from "vuex"
 import { GlobalDataProps, PostProps } from "@/store"
 import { useRouter } from "vue-router"
-import axios from "axios"
+import createMessge from "@/ts/createMessage"
+import Uploader from "@/components/Uploader.vue"
 
 const titleVal = ref("")
 const contentVal = ref("")
@@ -67,21 +78,15 @@ const onFormSubmit = (result: boolean) => {
   }
 }
 
-const handleFileChange = (e: Event) => {
-  const target = e.target as HTMLInputElement //获取Input元素
-  const files = target.files //files是input中的文件
-  if (files) {
-    const uploadedFile = files[0] //只上传一个文件
-    const formData = new FormData()
-    formData.append(uploadedFile.name, uploadedFile)
-    axios
-      .post("/upload", formData, {
-        headers: {
-          "Content-Type": "mutipart/form-data",
-        },
-      })
-      .then((res: object) => console.log(res))
+const beforeUpload = (file: File) => {
+  const isPic =
+    file.type === "image/jpeg" ||
+    file.type === "image/png" ||
+    file.type === "image/gif"
+  if (!isPic) {
+    createMessge("上传的图片只能是JPG、PNG、GIF格式", "error")
   }
+  return isPic
 }
 </script>
 
