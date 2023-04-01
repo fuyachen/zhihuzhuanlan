@@ -1,5 +1,6 @@
 <template>
   <div class="create-post-page">
+    <input type="file" name="file" @change.prevent="handleFileChange" />
     <ValidateForm @from-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题</label>
@@ -31,9 +32,9 @@ import { ref } from "vue"
 import ValidateForm from "@/components/ValidateForm.vue"
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue"
 import { useStore } from "vuex"
-import { GlobalDataProps } from "@/store"
-import { PostProps } from "@/testData"
+import { GlobalDataProps, PostProps } from "@/store"
 import { useRouter } from "vue-router"
+import axios from "axios"
 
 const titleVal = ref("")
 const contentVal = ref("")
@@ -51,19 +52,35 @@ const router = useRouter()
 const onFormSubmit = (result: boolean) => {
   console.log(result)
   if (result) {
-    const { columnId } = store.state.user
-    if (columnId) {
+    const { column } = store.state.user
+    if (column) {
       const newPost: PostProps = {
-        columnId,
-        id: new Date().getTime(),
+        column,
         title: titleVal.value,
         createdAt: new Date().toLocaleString(),
         content: contentVal.value,
       }
       store.commit("createPost", newPost)
       // 创建完成后，跳转到专栏详情页
-      router.push({ name: "column", params: { id: columnId } })
+      router.push({ name: "column", params: { id: column } })
     }
+  }
+}
+
+const handleFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement //获取Input元素
+  const files = target.files //files是input中的文件
+  if (files) {
+    const uploadedFile = files[0] //只上传一个文件
+    const formData = new FormData()
+    formData.append(uploadedFile.name, uploadedFile)
+    axios
+      .post("/upload", formData, {
+        headers: {
+          "Content-Type": "mutipart/form-data",
+        },
+      })
+      .then((res: object) => console.log(res))
   }
 }
 </script>

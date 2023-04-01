@@ -9,14 +9,6 @@ export interface UserProps {
   isLogin: boolean
 }
 
-// _id	string
-// email	string
-// nickName	string
-// description	string
-// avatar	string
-// column	string
-// createdAt	string($date-time)
-
 interface ImageProps {
   _id?: string
   url?: string
@@ -29,11 +21,11 @@ export interface ColumnProps {
   description: string
 }
 export interface PostProps {
-  _Id: string
+  _Id?: string
   title: string
   image?: ImageProps
   content: string
-  excerpt: string //content的摘要
+  excerpt?: string //content的摘要
   column: string
   createdAt: string
 }
