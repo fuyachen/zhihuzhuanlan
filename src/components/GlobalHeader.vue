@@ -66,7 +66,7 @@ const signout = () => {
   createMessge("您已退出登录，即将返回首页", "default", 2000)
   store.dispatch("fetchCurrentUser").then(() => {
     setTimeout(() => {
-      store.state.user.isLogin = false
+      store.commit("logout")
       router.push("/")
     }, 2000)
   })

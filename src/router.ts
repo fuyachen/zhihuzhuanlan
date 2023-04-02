@@ -54,13 +54,13 @@ router.beforeEach((to, from, next) => {
           if (redirectAlreadyLogin) {
             next("/") //如果是登陆页面，则跳转到首页
           } else {
-            next("") //路由放行
+            next() //路由放行
           }
         })
         .catch((err) => {
           console.log(err)
           store.commit("logout")
-          next("login")
+          next("/login")
         })
     } else {
       if (requiredLogin) {
