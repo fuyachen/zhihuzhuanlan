@@ -6,6 +6,7 @@ import CreatePost from "@/views/CreatePost.vue"
 import store from "@/store"
 import Signup from "./views/Signup.vue"
 import axios from "axios"
+import PostDetail from "./views/PostDetail.vue"
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     name: "signup",
     path: "/signup",
     component: Signup,
+  },
+  {
+    name: "post",
+    path: "/posts/:id",
+    component: PostDetail,
   },
 ]
 

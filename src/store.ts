@@ -8,6 +8,7 @@ export interface UserProps {
   column?: string
   isLogin: boolean
   avatar?: ImageProps
+  description?: string
 }
 
 export interface ImageProps {
@@ -23,7 +24,7 @@ export interface ColumnProps {
   description: string
 }
 export interface PostProps {
-  _Id?: string
+  _id?: string
   title: string
   image?: ImageProps | string
   content: string
@@ -127,6 +128,10 @@ const store = createStore<GlobalDataProps>({
       localStorage.removeItem("token")
       delete axios.defaults.headers.common.Authorization
     },
+
+    fetchPost(state, rawData) {
+      state.posts = [rawData.data]
+    },
   },
 
   actions: {
@@ -161,6 +166,10 @@ const store = createStore<GlobalDataProps>({
     createPost({ commit }, payload) {
       return postAndCommit("/posts", payload, "createPost", commit)
     },
+
+    fetchPost({ commit }, id) {
+      return getAndCommit(`/posts/${id}`, "fetchPost", commit)
+    },
   },
 
   getters: {
@@ -171,6 +180,12 @@ const store = createStore<GlobalDataProps>({
     getPostById(state) {
       return (cid: string) => {
         return state.posts.filter((post) => post.column === cid)
+      }
+    },
+
+    getCurrentPost(state) {
+      return (id: string) => {
+        return state.posts.find((post) => post._id === id)
       }
     },
   },

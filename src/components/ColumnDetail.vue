@@ -16,7 +16,7 @@
         <p class="text-muted">{{ column.description }}</p>
       </div>
     </div>
-    <PostList :postList="postList"></PostList>
+    <PostList :list="postList"></PostList>
   </div>
 </template>
 
@@ -24,10 +24,9 @@
 import PostList from "./PostList.vue"
 import { useRoute } from "vue-router"
 import { computed, onMounted } from "vue"
-import { ColumnProps, GlobalDataProps, PostProps } from "@/store"
+import { ColumnProps, GlobalDataProps } from "@/store"
 import { useStore } from "vuex"
-import postUrl from "@/assets/post.png"
-import { generateFitUrl } from "@/ts/generateFitUrl"
+import { addColumnAvatar } from "@/ts/generateFitUrl"
 
 const route = useRoute()
 const store = useStore<GlobalDataProps>()
@@ -40,32 +39,19 @@ onMounted(() => {
 })
 // 获取id对应的专栏
 const column = computed(() => {
-  let SelectColumn = store.getters.getColumnById(currentId) as
+  let selectColumn = store.getters.getColumnById(currentId) as
     | ColumnProps
     | undefined
   // if (!column.avatar.url) {
   //   column.avatar.url = imgUrl
   // }
-  if (SelectColumn) {
-    generateFitUrl(SelectColumn, 100, 100)
+  if (selectColumn) {
+    addColumnAvatar(selectColumn, 100, 100)
   }
-  return SelectColumn
+  return selectColumn
 })
 // 获取专栏中的文章
-const postList = computed(() => {
-  let postList: PostProps[] = store.getters.getPostById(currentId)
-  postList = postList.map((post) => {
-    if (!post.image) {
-      post.image = { url: postUrl }
-    }
-    if (post.image && typeof post.image !== "string") {
-      post.image.url =
-        post.image.url + "?x-oss-process=image/resize,m_fixed,h_100,w_200"
-    }
-    return post
-  })
-  return postList
-})
+const postList = computed(() => store.getters.getPostById(currentId))
 </script>
 
 <style scoped></style>
