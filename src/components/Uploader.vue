@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="file-upload-container" @click.prevent="triggerUpload">
+    <div
+      class="file-upload-container"
+      @click.prevent="triggerUpload"
+      v-bind="$attrs"
+    >
       <slot v-if="fileStatus === 'uploading'" name="uploading"> </slot>
       <slot
         v-else-if="fileStatus === 'success'"
@@ -20,6 +24,13 @@
     />
   </div>
 </template>
+
+<script lang="ts">
+// 使用普通的 <script> 来声明选项
+export default {
+  inheritAttrs: false,
+}
+</script>
 
 <script setup lang="ts">
 import { ref } from "vue"

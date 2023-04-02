@@ -1,16 +1,23 @@
 <template>
   <div class="create-post-page">
-    <Uploader :beforeUpload="beforeUpload" action="/upload">
+    <Uploader
+      :beforeUpload="beforeUpload"
+      action="/upload"
+      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+    >
+      <h2>点击上传文章头图</h2>
       <template v-slot:uploading>
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">加载中...</span>
+        <div class="d-flex">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">加载中...</span>
+          </div>
+          <h2>正在上传</h2>
         </div>
       </template>
       <template v-slot:uploaded="slotProps">
-        <img :src="slotProps.uploadeData.data.url" width="500" />
+        <img :src="slotProps.uploadeData.data.url" />
       </template>
     </Uploader>
-    <!-- <input type="file" name="file" @change.prevent="handleFileChange" /> -->
     <ValidateForm @from-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题</label>
@@ -90,4 +97,14 @@ const beforeUpload = (file: File) => {
 }
 </script>
 
-<style scoped></style>
+<style>
+.create-post-page .file-upload-container {
+  height: 300px;
+  cursor: pointer;
+}
+.create-post-page .file-upload-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

@@ -60,12 +60,12 @@ router.beforeEach((to, from, next) => {
         .catch((err) => {
           console.log(err)
           store.commit("logout")
-          next("/login")
+          next("login")
         })
     } else {
       if (requiredLogin) {
         //未登录，无token
-        next("/login")
+        next("login")
       } else {
         next()
       }
