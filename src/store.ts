@@ -110,6 +110,13 @@ const store = createStore<GlobalDataProps>({
     setError(state, err) {
       state.error = err
     },
+    // 退出登录(清除vuex、localStorage、请求头中的token)
+    logout(state) {
+      state.user.isLogin = false
+      state.token = ""
+      localStorage.removeItem("token")
+      delete axios.defaults.headers.common.Authorization
+    },
   },
 
   actions: {

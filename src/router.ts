@@ -49,17 +49,17 @@ router.beforeEach((to, from, next) => {
       //未登录，有token
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
       store
-        .dispatch("fetchCurrentUser")
+        .dispatch("fetchCurrentUser") //token验证成功，获取用户信息
         .then(() => {
           if (redirectAlreadyLogin) {
-            next("/")
+            next("/") //如果是登陆页面，则跳转到首页
           } else {
-            next("")
+            next("") //路由放行
           }
         })
         .catch((err) => {
           console.log(err)
-          localStorage.removeItem("token")
+          store.commit("logout")
           next("login")
         })
     } else {
