@@ -54,6 +54,7 @@ const getAndCommit = async (
   // 将data从响应体中解构出来
   const { data } = await axios.get(url)
   commit(mutationName, data)
+  return data
 }
 
 //封装post请求
@@ -113,15 +114,15 @@ const store = createStore<GlobalDataProps>({
 
   actions: {
     fetchColumns({ commit }) {
-      getAndCommit("/columns", "fetchColumns", commit)
+      return getAndCommit("/columns", "fetchColumns", commit)
     },
 
     fetchColumn({ commit }, cid) {
-      getAndCommit(`/columns/${cid}`, "fetchColumn", commit)
+      return getAndCommit(`/columns/${cid}`, "fetchColumn", commit)
     },
 
     fetchPosts({ commit }, cid) {
-      getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
+      return getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
     },
 
     fetchCurrentUser({ commit }) {

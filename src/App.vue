@@ -29,22 +29,13 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import GlobalHeader from "./components/GlobalHeader.vue"
 import Loader from "./components/Loader.vue"
 import { useStore } from "vuex"
-import { computed, onMounted, watch } from "vue"
+import { computed, watch } from "vue"
 import { GlobalDataProps } from "./store"
-import axios from "axios"
 import createMessge from "./ts/createMessage"
 
 const store = useStore<GlobalDataProps>()
 const isLoading = computed(() => store.state.loading)
 const err = computed(() => store.state.error)
-
-// App第一次加载时检查token是否存在，以及用户是否未登录
-onMounted(() => {
-  if (store.state.token && !store.state.user.isLogin) {
-    axios.defaults.headers.common.Authorization = `Bearer ${store.state.token}`
-    store.dispatch("fetchCurrentUser")
-  }
-})
 
 // 侦听err，status为true，渲染错误信息提示组件
 watch(
