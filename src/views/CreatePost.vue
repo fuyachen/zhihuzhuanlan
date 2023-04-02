@@ -1,7 +1,7 @@
 <template>
   <div class="create-post-page">
     <Uploader
-      :beforeUpload="beforeUpload"
+      :beforeUpload="uploadCheck"
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
     >
@@ -53,6 +53,7 @@ import { GlobalDataProps, PostProps } from "@/store"
 import { useRouter } from "vue-router"
 import createMessge from "@/ts/createMessage"
 import Uploader from "@/components/Uploader.vue"
+import { beforeUploadCheck } from "@/ts/uploadCheck"
 
 const titleVal = ref("")
 const contentVal = ref("")
@@ -85,15 +86,20 @@ const onFormSubmit = (result: boolean) => {
   }
 }
 
-const beforeUpload = (file: File) => {
-  const isPic =
-    file.type === "image/jpeg" ||
-    file.type === "image/png" ||
-    file.type === "image/gif"
-  if (!isPic) {
-    createMessge("上传的图片只能是JPG、PNG、GIF格式", "error")
+// 检查上传文件格式，大小
+const uploadCheck = (file: File) => {
+  const result = beforeUploadCheck(file, {
+    format: ["image/jpeg", "image/png", "image/gif"],
+    size: 2,
+  })
+  const { passed, error } = result
+  if (error === "format") {
+    createMessge("上传的图片只能是JPG、PNG、GIF格式!", "error", 2000)
   }
-  return isPic
+  if (error === "size") {
+    createMessge("图片大小不能超过2MB!", "error", 1000)
+  }
+  return passed
 }
 </script>
 
