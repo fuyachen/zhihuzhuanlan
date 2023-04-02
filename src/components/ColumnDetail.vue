@@ -6,9 +6,9 @@
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar.url"
+          :src="column.avatar && column.avatar.fitUrl"
           :alt="column.title"
-          class="rounded-circle border"
+          class="rounded-circle border w-100"
         />
       </div>
       <div class="col-9">
@@ -24,10 +24,10 @@
 import PostList from "./PostList.vue"
 import { useRoute } from "vue-router"
 import { computed, onMounted } from "vue"
-import { GlobalDataProps, PostProps } from "@/store"
+import { ColumnProps, GlobalDataProps, PostProps } from "@/store"
 import { useStore } from "vuex"
-import imgUrl from "@/assets/column.jpg"
 import postUrl from "@/assets/post.png"
+import { generateFitUrl } from "@/ts/generateFitUrl"
 
 const route = useRoute()
 const store = useStore<GlobalDataProps>()
@@ -40,11 +40,16 @@ onMounted(() => {
 })
 // 获取id对应的专栏
 const column = computed(() => {
-  let column = store.getters.getColumnById(currentId)
-  if (!column.avatar.url) {
-    column.avatar.url = imgUrl
+  let SelectColumn = store.getters.getColumnById(currentId) as
+    | ColumnProps
+    | undefined
+  // if (!column.avatar.url) {
+  //   column.avatar.url = imgUrl
+  // }
+  if (SelectColumn) {
+    generateFitUrl(SelectColumn, 100, 100)
   }
-  return column
+  return SelectColumn
 })
 // 获取专栏中的文章
 const postList = computed(() => {
@@ -52,7 +57,8 @@ const postList = computed(() => {
   postList = postList.map((post) => {
     if (!post.image) {
       post.image = { url: postUrl }
-    } else {
+    }
+    if (post.image && typeof post.image !== "string") {
       post.image.url =
         post.image.url + "?x-oss-process=image/resize,m_fixed,h_100,w_200"
     }
