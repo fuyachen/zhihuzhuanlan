@@ -4,6 +4,7 @@
       :beforeUpload="uploadCheck"
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+      @file-uploaded="handleFileUploaded"
     >
       <h2>点击上传文章头图</h2>
       <template v-slot:uploading>
@@ -49,7 +50,7 @@ import { ref } from "vue"
 import ValidateForm from "@/components/ValidateForm.vue"
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue"
 import { useStore } from "vuex"
-import { GlobalDataProps, PostProps } from "@/store"
+import { GlobalDataProps, PostProps, ResponseType } from "@/store"
 import { useRouter } from "vue-router"
 import createMessge from "@/ts/createMessage"
 import Uploader from "@/components/Uploader.vue"
@@ -69,19 +70,26 @@ const store = useStore<GlobalDataProps>()
 const router = useRouter()
 
 const onFormSubmit = (result: boolean) => {
-  console.log(result)
   if (result) {
-    const { column } = store.state.user
+    const { column, _id } = store.state.user
     if (column) {
       const newPost: PostProps = {
         column,
         title: titleVal.value,
-        createdAt: new Date().toLocaleString(),
         content: contentVal.value,
+        author: _id,
       }
-      store.commit("createPost", newPost)
+      if (imageId) {
+        newPost.image = imageId
+      }
+      console.log(column)
+      store.dispatch("createPost", newPost).then(() => {
+        createMessge("发表成功，即将跳转到文章", "success", 2000)
+      })
       // 创建完成后，跳转到专栏详情页
-      router.push({ name: "column", params: { id: column } })
+      setTimeout(() => {
+        router.push({ name: "column", params: { id: column } })
+      }, 2000)
     }
   }
 }
@@ -100,6 +108,14 @@ const uploadCheck = (file: File) => {
     createMessge("图片大小不能超过2MB!", "error", 1000)
   }
   return passed
+}
+
+// 上传文件后，获取后端返回的图片id
+let imageId = ""
+const handleFileUploaded = (rawData: ResponseType) => {
+  if (rawData.data._id) {
+    imageId = rawData.data._id
+  }
 }
 </script>
 

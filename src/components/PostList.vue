@@ -8,7 +8,10 @@
       <div class="card-body">
         <h4>{{ post.title }}</h4>
         <div class="row my-3 align-items-center">
-          <div v-if="post.image" class="col-3">
+          <div
+            v-if="post.image && typeof post.image !== 'string'"
+            class="col-3"
+          >
             <img
               :src="post.image.url"
               :alt="post.title"

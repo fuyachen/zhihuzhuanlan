@@ -7,12 +7,14 @@ export interface UserProps {
   nickName?: string
   column?: string
   isLogin: boolean
+  avatar?: ImageProps
 }
 
-interface ImageProps {
+export interface ImageProps {
   _id?: string
   url?: string
   createdAt?: string
+  fitUrl?: string
 }
 export interface ColumnProps {
   _id: string
@@ -23,11 +25,19 @@ export interface ColumnProps {
 export interface PostProps {
   _Id?: string
   title: string
-  image?: ImageProps
+  image?: ImageProps | string
   content: string
   excerpt?: string //content的摘要
   column: string
-  createdAt: string
+  createdAt?: string
+  author?: string
+}
+
+// 上传文件后返回的数据
+export interface ResponseType {
+  code: number
+  msg: string
+  data: ImageProps
 }
 
 export interface GlobalErrorProps {
@@ -145,6 +155,11 @@ const store = createStore<GlobalDataProps>({
     loginAndFetch({ dispatch }, payload) {
       // 返回promise
       return dispatch("login", payload).then(() => dispatch("fetchCurrentUser"))
+    },
+
+    // 创建文章
+    createPost({ commit }, payload) {
+      return postAndCommit("/posts", payload, "createPost", commit)
     },
   },
 

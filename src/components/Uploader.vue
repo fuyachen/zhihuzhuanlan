@@ -44,6 +44,8 @@ const props = defineProps<{
   beforeUpload: CheckFuction
 }>()
 
+const emit = defineEmits(["file-uploaded", "file-uploaded-error"])
+
 const fileInput = ref<null | HTMLInputElement>(null)
 const fileStatus = ref<UploadStatus>("ready")
 const uploadeData = ref()
@@ -82,9 +84,11 @@ const handleFileChange = (e: Event) => {
         console.log(res.data)
         fileStatus.value = "success"
         uploadeData.value = res.data
+        emit("file-uploaded", res.data)
       })
-      .catch(() => {
+      .catch((error) => {
         fileStatus.value = "error"
+        emit("file-uploaded-error", { error })
       })
       .finally(() => {
         //清空input上的文件
