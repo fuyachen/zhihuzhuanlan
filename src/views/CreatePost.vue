@@ -19,6 +19,10 @@
         <img :src="slotProps.uploadeData.data.url" />
       </template>
     </Uploader>
+    <div class="form-text py-2 text-center">
+      Allowed *.jpg, *.png, *.gif<br />
+      max size of 1 MB
+    </div>
     <ValidateForm @from-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题</label>
@@ -39,7 +43,9 @@
         ></validate-input>
       </div>
       <template v-slot:submit>
-        <button type="submit" class="btn btn-primary btn-lg">发表文章</button>
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-primary btn-lg">发表文章</button>
+        </div>
       </template>
     </ValidateForm>
   </div>

@@ -1,44 +1,52 @@
 <template>
-  <ValidateForm @from-submit="onFormSubmit">
-    <div class="mb-3">
-      <label class="form-label">邮箱地址</label>
-      <validate-input
-        :rules="emailRules"
-        v-model="emailVal"
-        placeholder="请输入邮箱地址"
-      ></validate-input>
+  <div class="signup-page mx-auto p-5 d-flex justify-content-center">
+    <div class="form-container w-25">
+      <h4 class="mb-3 text-center">注册账号</h4>
+      <ValidateForm @from-submit="onFormSubmit">
+        <div class="mb-3">
+          <label class="form-label">邮箱地址</label>
+          <validate-input
+            :rules="emailRules"
+            v-model="emailVal"
+            placeholder="请输入邮箱地址"
+          ></validate-input>
+          <label class="form-label">昵称</label>
+          <validate-input
+            :rules="nicknameRules"
+            v-model="nicknameVal"
+            placeholder="请输入昵称"
+            type="text"
+          ></validate-input>
+        </div>
+        <div>
+          <label class="form-label">密码</label>
+          <validate-input
+            :rules="passwordRules"
+            v-model="passwordVal"
+            placeholder="请输入6-16位密码"
+            type="password"
+          ></validate-input>
+        </div>
+        <div>
+          <label class="form-label">重复密码</label>
+          <validate-input
+            :rules="repeatPasswordRules"
+            v-model="repeatPasswordVal"
+            placeholder="请重复密码"
+            type="password"
+          ></validate-input>
+        </div>
+        <template v-slot:submit>
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary">注册</button>
+          </div>
+        </template>
+        <div class="form-text py-2">
+          <router-link to="/login">已有账户，跳转登录</router-link>
+        </div>
+      </ValidateForm>
     </div>
-    <div>
-      <label class="form-label">昵称</label>
-      <validate-input
-        :rules="nicknameRules"
-        v-model="nicknameVal"
-        placeholder="请输入昵称"
-        type="text"
-      ></validate-input>
-    </div>
-    <div>
-      <label class="form-label">密码</label>
-      <validate-input
-        :rules="passwordRules"
-        v-model="passwordVal"
-        placeholder="请输入6-16位密码"
-        type="password"
-      ></validate-input>
-    </div>
-    <div>
-      <label class="form-label">重复密码</label>
-      <validate-input
-        :rules="repeatPasswordRules"
-        v-model="repeatPasswordVal"
-        placeholder="请重复密码"
-        type="password"
-      ></validate-input>
-    </div>
-    <template v-slot:submit>
-      <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-    </template>
-  </ValidateForm>
+  </div>
 </template>
 
 <script setup lang="ts">

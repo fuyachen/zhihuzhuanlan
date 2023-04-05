@@ -1,33 +1,36 @@
 <template>
-  <div class="login-page mx-auto p-5 w-330">
-    <h4 class="my-4 text-center">登录到专栏</h4>
-    <ValidateForm @from-submit="onFormSubmit">
-      <div class="mb-3">
-        <label class="form-label">邮箱地址</label>
-        <validate-input
-          :rules="emailRules"
-          v-model="emailVal"
-          placeholder="请输入邮箱"
-        ></validate-input>
+  <div class="login-page mx-auto p-5 d-flex justify-content-center">
+    <div class="form-container w-25">
+      <h4 class="my-4 text-center">登录到专栏</h4>
+      <ValidateForm @from-submit="onFormSubmit">
+        <div class="mb-3">
+          <label class="form-label">邮箱地址</label>
+          <validate-input
+            :rules="emailRules"
+            v-model="emailVal"
+            placeholder="请输入邮箱"
+          ></validate-input>
+        </div>
+        <div>
+          <label class="form-label">密码</label>
+          <validate-input
+            :rules="passwordRules"
+            v-model="passwordVal"
+            placeholder="请输入6-16位密码"
+            type="password"
+          ></validate-input>
+        </div>
+        <template v-slot:submit>
+          <div class="text-center my-4">
+            <button type="submit" class="btn btn-primary">登录</button>
+          </div>
+        </template>
+      </ValidateForm>
+      <div class="form-text text-center">
+        <br />
+        测试账号：test@abc.com<br />
+        测试密码：123123
       </div>
-      <div>
-        <label class="form-label">密码</label>
-        <validate-input
-          :rules="passwordRules"
-          v-model="passwordVal"
-          placeholder="请输入6-16位密码"
-          type="password"
-        ></validate-input>
-      </div>
-
-      <template v-slot:submit>
-        <button type="submit" class="btn btn-primary">登录</button>
-      </template>
-    </ValidateForm>
-    <div class="form-text py-2">
-      <br />
-      测试账号：test@abc.com<br />
-      测试密码：123123
     </div>
   </div>
 </template>

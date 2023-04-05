@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid px-0">
     <global-header></global-header>
-    <Loader v-if="isLoading"></Loader>
-    <router-link to="/"></router-link>
-    <router-link to="/login"></router-link>
-    <router-view></router-view>
+    <main>
+      <Loader v-if="isLoading"></Loader>
+      <router-view></router-view>
+    </main>
     <footer class="text-center py-4 text-secondary bg-light mt-4">
       <small>
         <ul class="list-inline mb-0">
@@ -49,4 +49,4 @@ watch(
 )
 </script>
 
-<style scoped></style>
+<style></style>
