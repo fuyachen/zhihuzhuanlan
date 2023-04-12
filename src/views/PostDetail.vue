@@ -22,6 +22,15 @@
         >
       </div>
       <div v-html="currentHTML"></div>
+      <div v-if="showEditArea" class="editArea mt-5">
+        <routerLink
+          :to="{ name: 'createPost', query: { id: currentPost._id } }"
+          type="button"
+          class="btn btn-primary"
+          >编辑</routerLink
+        >
+        <button type="button" class="btn btn-danger">删除</button>
+      </div>
     </article>
   </div>
 </template>
@@ -31,7 +40,7 @@ import { defineComponent, onMounted, computed } from "vue"
 import MarkdownIt from "markdown-it"
 import { useStore } from "vuex"
 import { useRoute } from "vue-router"
-import { GlobalDataProps, PostProps, ImageProps } from "../store"
+import { GlobalDataProps, PostProps, ImageProps, UserProps } from "../store"
 import UserProfile from "../components/UserProfile.vue"
 
 export default defineComponent({
@@ -64,10 +73,21 @@ export default defineComponent({
         return null
       }
     })
+
+    const showEditArea = computed(() => {
+      const { isLogin, _id } = store.state.user
+      if (currentPost.value && currentPost.value.author && isLogin) {
+        const postAuthor = currentPost.value.author as UserProps
+        return postAuthor._id === _id
+      } else {
+        return false
+      }
+    })
     return {
       currentPost,
       currentImageUrl,
       currentHTML,
+      showEditArea,
     }
   },
 })

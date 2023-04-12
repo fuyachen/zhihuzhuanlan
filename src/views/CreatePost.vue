@@ -1,6 +1,7 @@
 <template>
-  <div class="create-post-page">
+  <div class="create-post-page mx-5">
     <Uploader
+      :uploaded="uploadedData"
       :beforeUpload="uploadCheck"
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -16,7 +17,10 @@
         </div>
       </template>
       <template v-slot:uploaded="slotProps">
-        <img :src="slotProps.uploadeData.data.url" />
+        <div class="uploaded-area">
+          <img :src="slotProps.uploadedData.data.url" />
+          <h3>点击重新上传</h3>
+        </div>
       </template>
     </Uploader>
     <div class="form-text py-2 text-center">
@@ -44,7 +48,9 @@
       </div>
       <template v-slot:submit>
         <div class="text-center mt-3">
-          <button type="submit" class="btn btn-primary btn-lg">发表文章</button>
+          <button type="submit" class="btn btn-primary btn-lg">
+            {{ isEditMode ? "更新文章" : "发表文章" }}
+          </button>
         </div>
       </template>
     </ValidateForm>
@@ -52,12 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import ValidateForm from "@/components/ValidateForm.vue"
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue"
 import { useStore } from "vuex"
-import { GlobalDataProps, PostProps, ResponseType } from "@/store"
-import { useRouter } from "vue-router"
+import { GlobalDataProps, ImageProps, PostProps, ResponseType } from "@/store"
+import { useRouter, useRoute } from "vue-router"
 import createMessge from "@/ts/createMessage"
 import Uploader from "@/components/Uploader.vue"
 import { beforeUploadCheck } from "@/ts/uploadCheck"
@@ -74,7 +80,9 @@ const contentRules: RulesProp = [
 
 const store = useStore<GlobalDataProps>()
 const router = useRouter()
+const route = useRoute()
 
+// 提交表单
 const onFormSubmit = (result: boolean) => {
   if (result) {
     const { column, _id } = store.state.user
@@ -88,8 +96,11 @@ const onFormSubmit = (result: boolean) => {
       if (imageId) {
         newPost.image = imageId
       }
-      console.log(column)
-      store.dispatch("createPost", newPost).then(() => {
+      const actionName = isEditMode ? "updatePost" : "createPost"
+      const sendData = isEditMode
+        ? { id: route.query._id, payload: newPost }
+        : newPost
+      store.dispatch(actionName, sendData).then(() => {
         createMessge("发表成功，即将跳转到文章", "success", 2000)
       })
       // 创建完成后，跳转到专栏详情页
@@ -118,11 +129,30 @@ const uploadCheck = (file: File) => {
 
 // 上传文件后，获取后端返回的图片id
 let imageId = ""
-const handleFileUploaded = (rawData: ResponseType) => {
+const handleFileUploaded = (rawData: ResponseType<ImageProps>) => {
   if (rawData.data._id) {
     imageId = rawData.data._id
   }
 }
+
+// 点击编辑文章后，获取文章id，请求文章数据
+const isEditMode = !!route.query.id
+const uploadedData = ref()
+
+onMounted(() => {
+  if (isEditMode) {
+    store
+      .dispatch("fetchPost", route.query.id)
+      .then((rawData: ResponseType<PostProps>) => {
+        const currentPost = rawData.data
+        if (currentPost.image) {
+          uploadedData.value = { data: currentPost.image }
+        }
+        titleVal.value = currentPost.title
+        contentVal.value = currentPost.content
+      })
+  }
+})
 </script>
 
 <style>

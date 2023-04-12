@@ -9,7 +9,7 @@
       <slot
         v-else-if="fileStatus === 'success'"
         name="uploaded"
-        :uploadeData="uploadeData"
+        :uploadedData="uploadedData"
       >
       </slot>
       <slot v-else name="default">
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import axios from "axios"
 
 type UploadStatus = "ready" | "uploading" | "success" | "error"
@@ -42,13 +42,23 @@ type CheckFuction = (file: File) => boolean
 const props = defineProps<{
   action: string
   beforeUpload: CheckFuction
+  uploaded: any
 }>()
 
 const emit = defineEmits(["file-uploaded", "file-uploaded-error"])
 
 const fileInput = ref<null | HTMLInputElement>(null)
-const fileStatus = ref<UploadStatus>("ready")
-const uploadeData = ref()
+const fileStatus = ref<UploadStatus>(props.uploaded ? "success" : "ready")
+const uploadedData = ref(props.uploaded)
+watch(
+  () => props.uploaded,
+  (newValue) => {
+    if (newValue) {
+      fileStatus.value = "success"
+      uploadedData.value = newValue
+    }
+  }
+)
 
 // 点击上传
 const triggerUpload = () => {
@@ -83,7 +93,7 @@ const handleFileChange = (e: Event) => {
       .then((res) => {
         console.log(res.data)
         fileStatus.value = "success"
-        uploadeData.value = res.data
+        uploadedData.value = res.data
         emit("file-uploaded", res.data)
       })
       .catch((error) => {

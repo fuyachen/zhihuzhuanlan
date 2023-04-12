@@ -1,5 +1,5 @@
 import { createStore, Commit } from "vuex"
-import axios from "axios"
+import axios, { AxiosRequestConfig } from "axios"
 
 export interface UserProps {
   _id?: string
@@ -31,14 +31,14 @@ export interface PostProps {
   excerpt?: string //content的摘要
   column: string
   createdAt?: string
-  author?: string
+  author?: string | UserProps
 }
 
 // 上传文件后返回的数据
-export interface ResponseType {
+export interface ResponseType<P = object> {
   code: number
   msg: string
-  data: ImageProps
+  data: P
 }
 
 export interface GlobalErrorProps {
@@ -77,6 +77,17 @@ const postAndCommit = async (
 ) => {
   const { data } = await axios.post(url, payload)
   commit(mutationName, data)
+}
+
+const asyncAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit,
+  config: AxiosRequestConfig = { method: "get" }
+) => {
+  const { data } = await axios(url, config)
+  commit(mutationName, data)
+  return data
 }
 
 const store = createStore<GlobalDataProps>({
@@ -132,6 +143,16 @@ const store = createStore<GlobalDataProps>({
     fetchPost(state, rawData) {
       state.posts = [rawData.data]
     },
+
+    updatePost(state, { data }) {
+      state.posts = state.posts.map((post) => {
+        if (post._id === data._id) {
+          return data
+        } else {
+          return post
+        }
+      })
+    },
   },
 
   actions: {
@@ -145,6 +166,14 @@ const store = createStore<GlobalDataProps>({
 
     fetchPosts({ commit }, cid) {
       return getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
+    },
+
+    // 更新文章
+    updatePost({ commit }, { id, payload }) {
+      return asyncAndCommit(`/post/${id}`, "updatePost", commit, {
+        method: "patch",
+        data: payload,
+      })
     },
 
     fetchCurrentUser({ commit }) {
