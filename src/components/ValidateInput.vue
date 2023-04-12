@@ -6,9 +6,8 @@
       type="text"
       class="form-control"
       :class="{ 'is-invalid': inputRef.err }"
-      :value="inputRef.val"
       @blur="validation"
-      @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     />
     <textarea
@@ -16,9 +15,8 @@
       rows="10"
       class="form-control"
       :class="{ 'is-invalid': inputRef.err }"
-      :value="inputRef.val"
+      v-model="inputRef.val"
       @blur="validation"
-      @input="updateValue"
       v-bind="$attrs"
     />
     <div v-if="inputRef.err" class="invalid-feedback">
@@ -37,7 +35,7 @@ export type RulesProp = RuleProp[]
 </script>
 
 <script setup lang="ts">
-import { reactive, onMounted } from "vue"
+import { reactive, onMounted, computed } from "vue"
 import { emitter } from "../ts/mitt"
 
 const props = withDefaults(
@@ -54,17 +52,15 @@ const props = withDefaults(
 const emit = defineEmits(["update:modelValue"])
 
 const inputRef = reactive({
-  val: props.modelValue || "",
+  val: computed({
+    get: () => props.modelValue || "",
+    set: (val) => {
+      emit("update:modelValue", val)
+    },
+  }),
   err: false,
   message: "",
 })
-
-const updateValue = (e: Event) => {
-  const targetValue = (e.target as HTMLInputElement).value
-  // 更新对应表单的值，为input的value
-  inputRef.val = targetValue
-  emit("update:modelValue", targetValue)
-}
 
 const emailReg = /^.+@[a-zA-Z0-9-]+\.([a-zA-Z0-9-]+)$/
 const minReg = /^[.\S]{6,}$/
