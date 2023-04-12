@@ -159,6 +159,7 @@ onMounted(() => {
 .create-post-page .file-upload-container {
   height: 300px;
   cursor: pointer;
+  overflow: hidden;
 }
 .create-post-page .file-upload-container img {
   width: 100%;
