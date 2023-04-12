@@ -98,7 +98,7 @@ const onFormSubmit = (result: boolean) => {
       }
       const actionName = isEditMode ? "updatePost" : "createPost"
       const sendData = isEditMode
-        ? { id: route.query._id, payload: newPost }
+        ? { id: route.query.id, payload: newPost }
         : newPost
       store.dispatch(actionName, sendData).then(() => {
         createMessge("发表成功，即将跳转到文章", "success", 2000)

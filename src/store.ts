@@ -32,6 +32,7 @@ export interface PostProps {
   column: string
   createdAt?: string
   author?: string | UserProps
+  isHTML?: boolean
 }
 
 // 上传文件后返回的数据
