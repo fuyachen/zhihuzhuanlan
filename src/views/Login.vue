@@ -28,8 +28,8 @@
       </ValidateForm>
       <div class="form-text text-center">
         <br />
-        测试账号：test@abc.com<br />
-        测试密码：123123
+        测试账号：111@test.com<br />
+        测试密码：111111
       </div>
     </div>
   </div>

@@ -17,8 +17,6 @@
             placeholder="请输入昵称"
             type="text"
           ></validate-input>
-        </div>
-        <div>
           <label class="form-label">密码</label>
           <validate-input
             :rules="passwordRules"
@@ -26,8 +24,6 @@
             placeholder="请输入6-16位密码"
             type="password"
           ></validate-input>
-        </div>
-        <div>
           <label class="form-label">重复密码</label>
           <validate-input
             :rules="repeatPasswordRules"

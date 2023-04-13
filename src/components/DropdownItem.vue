@@ -1,6 +1,6 @@
 <template>
   <li
-    class="dropdown-option"
+    class="dropdown-option text-center"
     @click="handleItemClick"
     :class="{ 'is-disabled': disabled }"
   >

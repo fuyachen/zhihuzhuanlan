@@ -20,7 +20,6 @@
         </a>
       </li>
     </ul>
-    <h4>编辑个人资料</h4>
     <uploader
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary circle mx-auto my-3"

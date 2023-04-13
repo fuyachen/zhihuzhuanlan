@@ -9,12 +9,13 @@
       <p>确定要删除这篇文章吗？</p>
     </modal>
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
-      <img
-        :src="currentImageUrl"
-        alt="currentPost.title"
-        class="rounded-lg img-fluid my-4"
-        v-if="currentImageUrl"
-      />
+      <div class="image-container my-4">
+        <img
+          :src="currentImageUrl"
+          alt="currentPost.title"
+          v-if="currentImageUrl"
+        />
+      </div>
       <h2 class="mb-4">{{ currentPost.title }}</h2>
       <div
         class="user-profile-component border-top border-bottom py-3 mb-5 align-items-center row g-0"
@@ -33,14 +34,14 @@
       <div v-if="showEditArea" class="btn-group mt-5">
         <router-link
           type="button"
-          class="btn btn-primary"
+          class="btn btn-outline-primary"
           :to="{ name: 'createPost', query: { id: currentPost._id } }"
         >
           编辑
         </router-link>
         <button
           type="button"
-          class="btn btn-danger"
+          class="btn btn-outline-danger mx-3"
           @click.prevent="modalIsVisible = true"
         >
           删除
@@ -131,3 +132,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.post-detail-page .image-container {
+  height: 300px;
+  overflow: hidden;
+}
+.post-detail-page .image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

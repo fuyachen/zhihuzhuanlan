@@ -9,7 +9,9 @@
             class="my-4 border border-light rounded-circle"
           />
           <h5 class="card-title">{{ column.title }}</h5>
-          <p class="card-text text-start my-4">{{ column.description }}</p>
+          <p class="description card-text text-start my-4">
+            {{ column.description }}
+          </p>
           <routerLink
             :to="{ name: 'column', params: { id: column._id } }"
             class="btn btn-primary"
@@ -43,5 +45,15 @@ const columnList = computed(() => {
 <style scoped>
 img {
   width: 50px;
+}
+.description {
+  line-height: 20px;
+  height: 43px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
