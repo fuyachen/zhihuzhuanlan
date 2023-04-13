@@ -1,5 +1,6 @@
 import { createStore, Commit } from "vuex"
 import axios, { AxiosRequestConfig } from "axios"
+import { arrToObj, objToArr } from "./ts/flatternData"
 
 export interface UserProps {
   _id?: string
@@ -47,11 +48,16 @@ export interface GlobalErrorProps {
   message: string
 }
 
+// 字符串索引
+interface ListProps<P> {
+  [id: string]: P
+}
+
 //为了获取state的代码提示，我们需要定义store中state的类型,再传入泛型中
 export interface GlobalDataProps {
   user: UserProps
-  columns: ColumnProps[]
-  posts: PostProps[]
+  columns: ListProps<ColumnProps>
+  posts: ListProps<PostProps>
   loading: boolean
   token: string
   error: GlobalErrorProps
@@ -94,8 +100,8 @@ const asyncAndCommit = async (
 const store = createStore<GlobalDataProps>({
   state: {
     user: { isLogin: false },
-    columns: [],
-    posts: [],
+    columns: {},
+    posts: {},
     loading: false,
     token: localStorage.getItem("token") || "",
     error: { status: false, message: "" },
@@ -103,16 +109,16 @@ const store = createStore<GlobalDataProps>({
 
   mutations: {
     createPost(state, newPost) {
-      state.posts.push(newPost)
+      state.posts[newPost._id] = newPost
     },
     fetchColumns(state, rawData) {
-      state.columns = rawData.data.list
+      state.columns = arrToObj(rawData.data.list)
     },
     fetchColumn(state, rawData) {
-      state.columns = [rawData.data]
+      state.columns[rawData.data._id] = rawData.data
     },
     fetchPosts(state, rawData) {
-      state.posts = rawData.data.list
+      state.posts = arrToObj(rawData.data.list)
     },
     setLoading(state, status) {
       state.loading = status
@@ -142,21 +148,15 @@ const store = createStore<GlobalDataProps>({
     },
 
     fetchPost(state, rawData) {
-      state.posts = [rawData.data]
+      state.posts[rawData.data._id] = rawData.data
     },
 
     updatePost(state, { data }) {
-      state.posts = state.posts.map((post) => {
-        if (post._id === data._id) {
-          return data
-        } else {
-          return post
-        }
-      })
+      state.posts[data._id] = data
     },
 
     deletePost(state, { data }) {
-      state.posts = state.posts.filter((post) => post._id !== data)
+      delete state.posts[data._id]
     },
   },
 
@@ -215,19 +215,23 @@ const store = createStore<GlobalDataProps>({
 
   getters: {
     getColumnById(state) {
-      return (cid: string) => state.columns.find((column) => column._id === cid)
+      return (id: string) => state.columns[id]
     },
 
     getPostById(state) {
       return (cid: string) => {
-        return state.posts.filter((post) => post.column === cid)
+        return objToArr(state.posts).filter((post) => post.column === cid)
       }
     },
 
     getCurrentPost(state) {
       return (id: string) => {
-        return state.posts.find((post) => post._id === id)
+        return state.posts[id]
       }
+    },
+
+    getColumns(state) {
+      return objToArr(state.columns)
     },
   },
 })

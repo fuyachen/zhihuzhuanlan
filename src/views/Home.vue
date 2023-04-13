@@ -28,7 +28,7 @@ onMounted(() => {
   store.dispatch("fetchColumns")
 })
 
-const columns = computed(() => store.state.columns)
+const columns = computed(() => store.getters.getColumns)
 </script>
 
 <style scoped>
