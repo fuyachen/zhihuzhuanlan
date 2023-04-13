@@ -51,7 +51,7 @@ const column = computed(() => {
   return selectColumn
 })
 // 获取专栏中的文章
-const postList = computed(() => store.getters.getPostById(currentId))
+const postList = computed(() => store.getters.getPostsByCid(currentId))
 </script>
 
 <style scoped></style>

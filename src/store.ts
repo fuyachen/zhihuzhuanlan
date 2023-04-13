@@ -2,16 +2,20 @@ import { createStore, Commit } from "vuex"
 import axios, { AxiosRequestConfig } from "axios"
 import { arrToObj, objToArr } from "./ts/flatternData"
 
+export interface ResponseType<P = object> {
+  code: number
+  msg: string
+  data: P
+}
 export interface UserProps {
-  _id?: string
-  email?: string
-  nickName?: string
-  column?: string
   isLogin: boolean
+  nickName?: string
+  _id?: string
+  column?: string
+  email?: string
   avatar?: ImageProps
   description?: string
 }
-
 export interface ImageProps {
   _id?: string
   url?: string
@@ -27,211 +31,173 @@ export interface ColumnProps {
 export interface PostProps {
   _id?: string
   title: string
+  excerpt?: string
+  content?: string
   image?: ImageProps | string
-  content: string
-  excerpt?: string //content的摘要
-  column: string
   createdAt?: string
+  column: string
   author?: string | UserProps
   isHTML?: boolean
 }
-
-// 上传文件后返回的数据
-export interface ResponseType<P = object> {
-  code: number
-  msg: string
-  data: P
-}
-
-export interface GlobalErrorProps {
-  status: boolean
-  message: string
-}
-
-// 字符串索引
 interface ListProps<P> {
   [id: string]: P
 }
-
-//为了获取state的代码提示，我们需要定义store中state的类型,再传入泛型中
+export interface GlobalErrorProps {
+  status: boolean
+  message?: string
+}
 export interface GlobalDataProps {
-  user: UserProps
-  columns: ListProps<ColumnProps>
-  posts: ListProps<PostProps>
-  loading: boolean
   token: string
   error: GlobalErrorProps
+  loading: boolean
+  columns: { data: ListProps<ColumnProps>; isLoaded: boolean }
+  posts: { data: ListProps<PostProps>; loadedColumns: string[] }
+  user: UserProps
 }
-
-// 封装get请求
-const getAndCommit = async (
-  url: string,
-  mutationName: string,
-  commit: Commit
-) => {
-  // 将data从响应体中解构出来
-  const { data } = await axios.get(url)
-  commit(mutationName, data)
-  return data
-}
-
-//封装post请求
-const postAndCommit = async (
-  url: string,
-  payload: any,
-  mutationName: string,
-  commit: Commit
-) => {
-  const { data } = await axios.post(url, payload)
-  commit(mutationName, data)
-}
-
 const asyncAndCommit = async (
   url: string,
   mutationName: string,
   commit: Commit,
-  config: AxiosRequestConfig = { method: "get" }
+  config: AxiosRequestConfig = { method: "get" },
+  extraData?: any
 ) => {
   const { data } = await axios(url, config)
-  commit(mutationName, data)
+  if (extraData) {
+    commit(mutationName, { data, extraData })
+  } else {
+    commit(mutationName, data)
+  }
   return data
 }
-
 const store = createStore<GlobalDataProps>({
   state: {
-    user: { isLogin: false },
-    columns: {},
-    posts: {},
-    loading: false,
     token: localStorage.getItem("token") || "",
-    error: { status: false, message: "" },
+    error: { status: false },
+    loading: false,
+    columns: { data: {}, isLoaded: false },
+    posts: { data: {}, loadedColumns: [] },
+    user: { isLogin: false },
   },
-
   mutations: {
     createPost(state, newPost) {
-      state.posts[newPost._id] = newPost
+      state.posts.data[newPost._id] = newPost
     },
     fetchColumns(state, rawData) {
-      state.columns = arrToObj(rawData.data.list)
+      state.columns.data = arrToObj(rawData.data.list)
+      state.columns.isLoaded = true
     },
     fetchColumn(state, rawData) {
-      state.columns[rawData.data._id] = rawData.data
+      state.columns.data[rawData.data._id] = rawData.data
     },
-    fetchPosts(state, rawData) {
-      state.posts = arrToObj(rawData.data.list)
+    fetchPosts(state, { data: rawData, extraData: columnId }) {
+      state.posts.data = { ...state.posts.data, ...arrToObj(rawData.data.list) }
+      state.posts.loadedColumns.push(columnId)
+    },
+    fetchPost(state, rawData) {
+      state.posts.data[rawData.data._id] = rawData.data
+    },
+    deletePost(state, { data }) {
+      delete state.posts.data[data._id]
+    },
+    updatePost(state, { data }) {
+      state.posts.data[data._id] = data
     },
     setLoading(state, status) {
       state.loading = status
     },
-    // 获取token,并将其添加到请求头中
-    login(state, payload) {
-      const { token } = payload.data
-      state.token = token
-      // 将登录信息存储到localStorage中
-      localStorage.setItem("token", token)
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+    setError(state, e: GlobalErrorProps) {
+      state.error = e
     },
-    // 更新用户信息
     fetchCurrentUser(state, rawData) {
-      state.user = { ...rawData.data, isLogin: true }
+      state.user = { isLogin: true, ...rawData.data }
     },
-    // 请求失败，更新error信息
-    setError(state, err) {
-      state.error = err
+    login(state, rawData) {
+      const { token } = rawData.data
+      state.token = token
+      localStorage.setItem("token", token)
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
     },
-    // 退出登录(清除vuex、localStorage、请求头中的token)
     logout(state) {
-      state.user.isLogin = false
       state.token = ""
-      localStorage.removeItem("token")
+      state.user = { isLogin: false }
+      localStorage.remove("token")
       delete axios.defaults.headers.common.Authorization
     },
-
-    fetchPost(state, rawData) {
-      state.posts[rawData.data._id] = rawData.data
-    },
-
-    updatePost(state, { data }) {
-      state.posts[data._id] = data
-    },
-
-    deletePost(state, { data }) {
-      delete state.posts[data._id]
-    },
   },
-
   actions: {
-    fetchColumns({ commit }) {
-      return getAndCommit("/columns", "fetchColumns", commit)
+    fetchColumns({ state, commit }) {
+      if (!state.columns.isLoaded) {
+        return asyncAndCommit("/columns", "fetchColumns", commit)
+      }
     },
-
-    fetchColumn({ commit }, cid) {
-      return getAndCommit(`/columns/${cid}`, "fetchColumn", commit)
+    fetchColumn({ state, commit }, cid) {
+      if (!state.columns.data[cid]) {
+        return asyncAndCommit(`/columns/${cid}`, "fetchColumn", commit)
+      }
     },
-
-    fetchPosts({ commit }, cid) {
-      return getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
+    fetchPosts({ state, commit }, cid) {
+      if (!state.posts.loadedColumns.includes(cid)) {
+        return asyncAndCommit(
+          `/columns/${cid}/posts`,
+          "fetchPosts",
+          commit,
+          { method: "get" },
+          cid
+        )
+      }
     },
-
-    fetchCurrentUser({ commit }) {
-      return getAndCommit("/user/current", "fetchCurrentUser", commit)
+    fetchPost({ state, commit }, id) {
+      const currentPost = state.posts.data[id]
+      if (!currentPost || !currentPost.content) {
+        return asyncAndCommit(`/posts/${id}`, "fetchPost", commit)
+      } else {
+        return Promise.resolve({ data: currentPost })
+      }
     },
-
-    login({ commit }, payload) {
-      // !!!这里要返回promise，否则mutation中拿不到数据！！！
-      return postAndCommit("/user/login", payload, "login", commit)
-    },
-
-    // 组合action，触发登录和获取用户信息
-    loginAndFetch({ dispatch }, payload) {
-      // 返回promise
-      return dispatch("login", payload).then(() => dispatch("fetchCurrentUser"))
-    },
-
-    // 创建文章
-    createPost({ commit }, payload) {
-      return postAndCommit("/posts", payload, "createPost", commit)
-    },
-
-    fetchPost({ commit }, id) {
-      return getAndCommit(`/posts/${id}`, "fetchPost", commit)
-    },
-
-    // 更新文章
     updatePost({ commit }, { id, payload }) {
       return asyncAndCommit(`/posts/${id}`, "updatePost", commit, {
         method: "patch",
         data: payload,
       })
     },
-
-    // 删除文章
+    fetchCurrentUser({ commit }) {
+      return asyncAndCommit("/user/current", "fetchCurrentUser", commit)
+    },
+    login({ commit }, payload) {
+      return asyncAndCommit("/user/login", "login", commit, {
+        method: "post",
+        data: payload,
+      })
+    },
+    createPost({ commit }, payload) {
+      return asyncAndCommit("/posts", "createPost", commit, {
+        method: "post",
+        data: payload,
+      })
+    },
     deletePost({ commit }, id) {
       return asyncAndCommit(`/posts/${id}`, "deletePost", commit, {
         method: "delete",
       })
     },
+    loginAndFetch({ dispatch }, loginData) {
+      return dispatch("login", loginData).then(() => {
+        return dispatch("fetchCurrentUser")
+      })
+    },
   },
-
   getters: {
-    getColumnById(state) {
-      return (id: string) => state.columns[id]
+    getColumns: (state) => {
+      return objToArr(state.columns.data)
     },
-
-    getPostById(state) {
-      return (cid: string) => {
-        return objToArr(state.posts).filter((post) => post.column === cid)
-      }
+    getColumnById: (state) => (id: string) => {
+      return state.columns.data[id]
     },
-
-    getCurrentPost(state) {
-      return (id: string) => {
-        return state.posts[id]
-      }
+    getPostsByCid: (state) => (cid: string) => {
+      return objToArr(state.posts.data).filter((post) => post.column === cid)
     },
-
-    getColumns(state) {
-      return objToArr(state.columns)
+    getCurrentPost: (state) => (id: string) => {
+      return state.posts.data[id]
     },
   },
 })

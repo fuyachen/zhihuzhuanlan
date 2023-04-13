@@ -4,7 +4,7 @@
       <div class="card h-100 mb-4 text-center shadow border-light">
         <div class="card-body">
           <img
-            :src="column.avatar.url"
+            :src="column.avatar && column.avatar.fitUrl"
             :alt="column.title"
             class="my-4 border border-light rounded-circle"
           />
@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
-import imgUrl from "@/assets/column.jpg"
 import { ColumnProps } from "@/store"
+import { addColumnAvatar } from "@/ts/generateFitUrl"
 
 // 父组件传来的专栏列表，是一个类型为ColumnProps的数组
 const props = defineProps<{
@@ -34,12 +34,7 @@ const props = defineProps<{
 // 当用户没有上传头像时，显示默认的图片
 const columnList = computed(() => {
   return props.list.map((column) => {
-    if (!column.avatar) {
-      column.avatar.url = imgUrl
-    } else {
-      column.avatar.url =
-        column.avatar.url + "?x-oss-process=image/resize,m_fixed,h_50,w_50"
-    }
+    addColumnAvatar(column, 50, 50)
     return column
   })
 })

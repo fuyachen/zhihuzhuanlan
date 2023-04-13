@@ -105,7 +105,7 @@ export default defineComponent({
         const { image } = currentPost.value
         return (image as ImageProps).url + "?x-oss-process=image/resize,w_850"
       } else {
-        return null
+        return ""
       }
     })
     const hideAndDelete = () => {
