@@ -3,7 +3,7 @@
     <Uploader
       :uploaded="uploadedData"
       :beforeUpload="uploadCheck"
-      action="/upload"
+      action="upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       @file-uploaded="handleFileUploaded"
     >

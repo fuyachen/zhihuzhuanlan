@@ -112,6 +112,7 @@ export default defineComponent({
     })
     const hideAndDelete = () => {
       modalIsVisible.value = false
+      console.log(currentId)
       store
         .dispatch("deletePost", currentId)
         .then((rawData: ResponseType<PostProps>) => {

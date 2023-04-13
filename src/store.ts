@@ -154,6 +154,10 @@ const store = createStore<GlobalDataProps>({
         }
       })
     },
+
+    deletePost(state, { data }) {
+      state.posts = state.posts.filter((post) => post._id !== data)
+    },
   },
 
   actions: {
@@ -167,14 +171,6 @@ const store = createStore<GlobalDataProps>({
 
     fetchPosts({ commit }, cid) {
       return getAndCommit(`/columns/${cid}/posts`, "fetchPosts", commit)
-    },
-
-    // 更新文章
-    updatePost({ commit }, { id, payload }) {
-      return asyncAndCommit(`/post/${id}`, "updatePost", commit, {
-        method: "patch",
-        data: payload,
-      })
     },
 
     fetchCurrentUser({ commit }) {
@@ -199,6 +195,21 @@ const store = createStore<GlobalDataProps>({
 
     fetchPost({ commit }, id) {
       return getAndCommit(`/posts/${id}`, "fetchPost", commit)
+    },
+
+    // 更新文章
+    updatePost({ commit }, { id, payload }) {
+      return asyncAndCommit(`/posts/${id}`, "updatePost", commit, {
+        method: "patch",
+        data: payload,
+      })
+    },
+
+    // 删除文章
+    deletePost({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, "deletePost", commit, {
+        method: "delete",
+      })
     },
   },
 
