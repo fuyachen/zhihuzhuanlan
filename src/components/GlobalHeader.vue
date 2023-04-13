@@ -37,8 +37,17 @@
               >新建文章</routerLink
             ></dropdown-item
           >
-          <dropdown-item disabled
-            ><a class="dropdown-item" href="#">管理账户</a></dropdown-item
+          <dropdown-item closeAfterClick
+            ><router-link
+              :to="`/column/${currentUser.column}`"
+              class="dropdown-item"
+              >我的专栏</router-link
+            ></dropdown-item
+          >
+          <dropdown-item closeAfterClick
+            ><routerLink to="/edit" class="dropdown-item"
+              >编辑资料</routerLink
+            ></dropdown-item
           >
           <dropdown-item @click="signout"
             ><a class="dropdown-item" href="#">退出登录</a></dropdown-item

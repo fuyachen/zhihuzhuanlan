@@ -1,13 +1,35 @@
 <template>
-  <!-- disable存在则有is-disabled类 -->
-  <li class="dropdown-item" :class="{ 'is-disabled': disabled }">
+  <li
+    class="dropdown-option"
+    @click="handleItemClick"
+    :class="{ 'is-disabled': disabled }"
+  >
     <slot></slot>
   </li>
 </template>
 
-<script setup lang="ts">
-withDefaults(defineProps<{ disabled?: boolean }>(), {
-  disabled: false,
+<script lang="ts">
+import { defineComponent } from "vue"
+import { emitter } from "./Dropdown.vue"
+export default defineComponent({
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    closeAfterClick: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup() {
+    const handleItemClick = () => {
+      emitter.emit("dropdown-item-clicked")
+    }
+    return {
+      handleItemClick,
+    }
+  },
 })
 </script>
 

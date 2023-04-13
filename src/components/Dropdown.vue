@@ -12,6 +12,11 @@
   </div>
 </template>
 
+<script lang="ts">
+import mitt from "mitt"
+export const emitter = mitt()
+</script>
+
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import useClickOutside from "@/hooks/useClickOutside"
@@ -36,6 +41,11 @@ watch(isClickOutside, () => {
     isOpen.value = false
   }
 })
+
+const dropDownItemClicked = () => {
+  isOpen.value = false
+}
+emitter.on("dropdown-item-clicked", dropDownItemClicked)
 </script>
 
 <style scoped></style>
