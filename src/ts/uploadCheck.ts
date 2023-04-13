@@ -1,4 +1,6 @@
 // 验证上传文件的格式和大小
+
+import createMessge from "./createMessage"
 interface CheckCondition {
   format?: string[]
   size?: number
@@ -24,4 +26,19 @@ export function beforeUploadCheck(file: File, condition: CheckCondition) {
     passed: isValidFomat && isValidSize,
     error,
   }
+}
+
+export const commonUploadCheck = (file: File) => {
+  const result = beforeUploadCheck(file, {
+    format: ["image/jpeg", "image/png"],
+    size: 1,
+  })
+  const { passed, error } = result
+  if (error === "format") {
+    createMessge("上传图片只能是 JPG/PNG 格式!", "error", 2000)
+  }
+  if (error === "size") {
+    createMessge("上传图片大小不能超过 1Mb", "error", 2000)
+  }
+  return passed
 }

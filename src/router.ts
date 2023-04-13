@@ -7,6 +7,7 @@ import store from "@/store"
 import Signup from "./views/Signup.vue"
 import axios from "axios"
 import PostDetail from "./views/PostDetail.vue"
+import EditProfile from "./views/EditProfile.vue"
 
 const routes = [
   {
@@ -40,6 +41,12 @@ const routes = [
     name: "post",
     path: "/posts/:id",
     component: PostDetail,
+  },
+  {
+    path: "/edit",
+    name: "edit",
+    component: EditProfile,
+    meta: { requiredLogin: true },
   },
 ]
 

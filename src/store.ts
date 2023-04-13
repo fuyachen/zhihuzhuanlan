@@ -50,7 +50,7 @@ export interface GlobalDataProps {
   token: string
   error: GlobalErrorProps
   loading: boolean
-  columns: { data: ListProps<ColumnProps>; isLoaded: boolean; total: number }
+  columns: { data: ListProps<ColumnProps>; currentPage: number; total: number }
   posts: { data: ListProps<PostProps>; loadedColumns: string[] }
   user: UserProps
 }
@@ -74,7 +74,7 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem("token") || "",
     error: { status: false },
     loading: false,
-    columns: { data: {}, isLoaded: false, total: 0 },
+    columns: { data: {}, currentPage: 0, total: 0 },
     posts: { data: {}, loadedColumns: [] },
     user: { isLogin: false },
   },
@@ -84,11 +84,11 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumns(state, rawData) {
       const { data } = state.columns
-      const { list, count } = rawData.data
+      const { list, currentPage, count } = rawData.data
       state.columns = {
         data: { ...data, ...arrToObj(list) },
+        currentPage: +currentPage,
         total: count,
-        isLoaded: true,
       }
     },
     fetchColumn(state, rawData) {
@@ -132,17 +132,22 @@ const store = createStore<GlobalDataProps>({
   actions: {
     fetchColumns({ state, commit }, params = {}) {
       const { currentPage = 1, pageSize = 6 } = params
-      // if (!state.columns.isLoaded) {
-      //   return asyncAndCommit("/columns", "fetchColumns", commit)
-      // }
-      return asyncAndCommit(
-        `/columns?currentPage=${currentPage}&pageSize=${pageSize}`,
-        "fetchColumns",
-        commit
-      )
+      if (state.columns.currentPage < currentPage) {
+        return asyncAndCommit(
+          `/columns?currentPage=${currentPage}&pageSize=${pageSize}`,
+          "fetchColumns",
+          commit
+        )
+      }
     },
-    fetchColumn({ state, commit }, cid) {
-      if (!state.columns.data[cid]) {
+    // fetchColumn({ state, commit }, cid) {
+    //   if (!state.columns.data[cid]) {
+    //     return asyncAndCommit(`/columns/${cid}`, "fetchColumn", commit)
+    //   }
+    // },
+    fetchColumn({ commit, state }, cid) {
+      const cIdArr = Object.keys(state.columns.data)
+      if (!cIdArr.includes(cid)) {
         return asyncAndCommit(`/columns/${cid}`, "fetchColumn", commit)
       }
     },
