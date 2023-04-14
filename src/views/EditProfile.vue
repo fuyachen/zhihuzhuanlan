@@ -37,7 +37,7 @@
       </template>
       <h3>点击上传头像</h3>
     </uploader>
-    <validate-form ref="formRef" @form-submit="onFormSubmit">
+    <ValidateForm ref="formRef" @form-submit="onFormSubmit">
       <validate-input
         :rules="nameRules"
         placeholder="请输入名称"
@@ -58,7 +58,7 @@
           </button>
         </div>
       </template>
-    </validate-form>
+    </ValidateForm>
   </div>
 </template>
 
@@ -178,6 +178,7 @@ export default defineComponent({
                 id: currentColumn.value._id,
                 payload,
               }
+        console.log(actionName, sendData)
         store.dispatch(actionName, sendData).then(() => {
           createMessage("修改成功，2秒后跳转到首页", "success", 2000)
           setTimeout(() => {

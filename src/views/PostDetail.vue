@@ -65,6 +65,7 @@ import {
 import UserProfile from "../components/UserProfile.vue"
 import Modal from "../components/Modal.vue"
 import createMessage from "../ts/createMessage"
+import MarkdownIt from "markdown-it"
 
 export default defineComponent({
   name: "post-detail",
@@ -78,6 +79,7 @@ export default defineComponent({
     const router = useRouter()
     const modalIsVisible = ref(false)
     const currentId = route.params.id
+    const md = new MarkdownIt()
     onMounted(() => {
       store.dispatch("fetchPost", currentId)
     })
@@ -87,7 +89,7 @@ export default defineComponent({
     const currentHTML = computed(() => {
       if (currentPost.value && currentPost.value.content) {
         const { isHTML, content } = currentPost.value
-        return isHTML ? content : content
+        return isHTML ? content : md.render(content)
       } else {
         return ""
       }
