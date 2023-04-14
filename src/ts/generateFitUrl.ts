@@ -1,6 +1,6 @@
 import { ColumnProps, ImageProps, UserProps } from "@/store"
-import columnImg from "@/assets/column.jpg"
-import avatarImg from "@/assets/avatar.jpg"
+import columnImg from "@/assets/image/column.jpg"
+import avatarImg from "@/assets/image/avatar.jpg"
 
 export function generateFitUrl(
   data: ImageProps,

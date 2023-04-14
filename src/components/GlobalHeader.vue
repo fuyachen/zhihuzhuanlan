@@ -10,7 +10,7 @@
       href="#"
     >
       <img
-        src="@/assets/logo.png"
+        src="@/assets/image/logo.png"
         alt="Logo"
         width="40"
         height="40"

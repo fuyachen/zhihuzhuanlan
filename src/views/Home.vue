@@ -2,7 +2,11 @@
   <div class="home-page container px-0">
     <div class="row py-lg-5 text-center">
       <div class="col-lg-6 col-md-8 mx-auto">
-        <img src="../assets/callout.svg" alt="callout" class="w-50 mb-4" />
+        <img
+          src="../assets/image/callout.svg"
+          alt="callout"
+          class="w-50 mb-4"
+        />
         <h2 class="font-weight-light">随心写作，自由表达</h2>
         <p>
           <routerLink to="./createPost" class="btn btn-primary my-4"
