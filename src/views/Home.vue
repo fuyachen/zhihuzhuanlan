@@ -51,7 +51,7 @@ const columns = computed(() => store.getters.getColumns)
 
 <style scoped>
 .home-page {
-  background-image: url(@/assets/background.svg);
+  background-image: url(@/assets/image/background.svg);
   background-attachment: fixed;
 }
 </style>
